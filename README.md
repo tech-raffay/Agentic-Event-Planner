@@ -13,13 +13,8 @@ An autonomous agentic event planner that parses noisy real-world messages (email
 
 ## 📸 User Interface Showcase
 
-### 1. Planner Studio UI (Approved Design System)
 Real-time web interface displaying live plan metrics, automated constraint checks, decision traces, message feed, and budget breakdown.
 ![Planner Studio UI](assets/ui_screenshot.png)
-
-### 2. Streamlit Control Dashboard
-Interactive operations dashboard showing venue status, catering allocations, judging rotation grid, and MTM Guardian audit trails.
-![Streamlit App UI](assets/ui_streamlit_screenshot.png)
 
 ---
 
