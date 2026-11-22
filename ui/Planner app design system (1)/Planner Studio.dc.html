@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#F4F4F5;color:#18181B;font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased;overflow:hidden}a{color:#2563EB;text-decoration:none}a:hover{color:#1D4ED8}*{box-sizing:border-box}textarea,button,input{font-family:inherit}</style>
+</helmet>
+<div style="height:100vh;min-width:1320px;display:grid;grid-template-rows:44px minmax(0,1fr);background:#F4F4F5;overflow-x:auto">
+
+<header style="display:flex;align-items:center;gap:10px;padding:0 10px 0 12px">
+  <div style="width:26px;height:26px;border-radius:50%;background:#27272A;position:relative;flex:none"><span style="position:absolute;left:8px;top:8px;width:10px;height:10px;border-radius:50%;background:#FFFFFF"></span></div>
+  <span style="color:#A1A1AA;font-size:16px;margin:0 2px">/</span>
+  <span style="display:flex;align-items:center;gap:7px;font-size:14px;color:#3F3F46"><span style="width:16px;height:16px;background:#52525B;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/hexagon.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/hexagon.svg) center/contain no-repeat"></span>Mind to Machine Hackathon</span>
+  <span style="color:#A1A1AA;font-size:16px;margin:0 2px">/</span>
+  <span style="display:flex;align-items:center;gap:7px;font-size:14px;color:#3F3F46"><span style="width:16px;height:16px;background:#52525B;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/file-text.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/file-text.svg) center/contain no-repeat"></span>pack.txt<span style="color:#A1A1AA;font-size:12px">{{ fileMeta }}</span></span>
+  <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+    <span style="display:flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:6px;background:{{ checksBg }};color:{{ checksFg }};font-size:13px;font-weight:500"><span style="width:15px;height:15px;background:{{ checksFg }};-webkit-mask:url({{ checksIcon }}) center/contain no-repeat;mask:url({{ checksIcon }}) center/contain no-repeat"></span>{{ checksLabel }}</span>
+    <button onClick="{{ dlPlan }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:6px;background:#E4E4E7;color:#27272A;font-size:13px;font-weight:500" style-hover="background:#D4D4D8">plan.md<span style="width:14px;height:14px;background:#27272A;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/download.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/download.svg) center/contain no-repeat"></span></button>
+    <button onClick="{{ dlTrace }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:6px;background:#DBEAFE;color:#1D4ED8;font-size:13px;font-weight:500" style-hover="background:#BFDBFE">trace.txt<span style="width:14px;height:14px;background:#1D4ED8;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/download.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/download.svg) center/contain no-repeat"></span></button>
+  </div>
+</header>
+
+<div style="display:grid;grid-template-columns:48px 210px 282px minmax(0,1fr) 372px;gap:0;min-height:0;padding:0 8px 8px 0">
+
+  <nav style="display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:4px">
+    <sc-for list="{{ rail }}" as="r" hint-placeholder-count="4">
+      <button onClick="{{ r.select }}" title="{{ r.label }}" style="all:unset;cursor:pointer;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:{{ r.bg }}" style-hover="background:#E4E4E7"><span style="width:18px;height:18px;background:{{ r.fg }};-webkit-mask:url({{ r.icon }}) center/contain no-repeat;mask:url({{ r.icon }}) center/contain no-repeat"></span></button>
+    </sc-for>
+    <a href="Brand Guide.dc.html" title="Brand guide" style="margin-top:auto;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center"><span style="width:18px;height:18px;background:#52525B;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/circle-help.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/circle-help.svg) center/contain no-repeat"></span></a>
+  </nav>
+
+  <aside style="background:#FFFFFF;border:1px solid #E4E4E7;border-right:none;border-radius:10px 0 0 10px;display:flex;flex-direction:column;min-height:0">
+    <div style="padding:14px 12px 10px;display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:15px;font-weight:500">Runs</span>
+      <div style="display:flex;gap:6px">
+        <button onClick="{{ goAdd }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border-radius:6px;background:#DBEAFE;color:#1D4ED8;font-size:13px;font-weight:500"><span style="width:14px;height:14px;background:#1D4ED8;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/plus.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/plus.svg) center/contain no-repeat"></span>Add message</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;padding:0 8px">
+      <sc-for list="{{ runs }}" as="r" hint-placeholder-count="3">
+        <button onClick="{{ r.select }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:9px;height:30px;padding:0 8px;border-radius:6px;background:{{ r.bg }}" style-hover="background:#F4F4F5">
+          <span style="width:15px;height:15px;flex:none;background:{{ r.color }};-webkit-mask:url({{ r.icon }}) center/contain no-repeat;mask:url({{ r.icon }}) center/contain no-repeat"></span>
+          <span style="font-size:13px;color:#27272A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="margin-top:auto;border-top:1px solid #E4E4E7;padding:12px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;background:#F4F4F5;border-radius:6px;padding:2px;align-self:flex-start">
+        <sc-for list="{{ sideTabs }}" as="t" hint-placeholder-count="2">
+          <button onClick="{{ t.select }}" style="all:unset;cursor:pointer;padding:4px 10px;border-radius:5px;font-size:13px;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.shadow }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ sideRows }}" as="c" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:8px;height:28px;font-size:13px">
+            <span style="width:14px;height:14px;flex:none;background:{{ c.color }};-webkit-mask:url({{ c.icon }}) center/contain no-repeat;mask:url({{ c.icon }}) center/contain no-repeat"></span>
+            <span style="color:#3F3F46;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+            <span style="color:{{ c.vfg }};font-weight:500">{{ c.value }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-size:12px;line-height:17px;color:#71717A">Six checks run in code after every plan, before anything is printed.</span>
+    </div>
+  </aside>
+
+  <aside style="background:#FFFFFF;border:1px solid #E4E4E7;display:flex;flex-direction:column;min-height:0">
+    <div style="padding:14px 12px 10px;display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:15px;font-weight:500">Messages</span>
+      <div style="display:flex;align-items:center;gap:8px;height:32px;border:1px solid #D4D4D8;border-radius:7px;padding:0 10px">
+        <span style="width:15px;height:15px;background:#71717A;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/search.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/search.svg) center/contain no-repeat"></span>
+        <input value="{{ q }}" onChange="{{ onQ }}" placeholder="Search messages" style="all:unset;flex:1;font-size:13px;color:#18181B"></input>
+      </div>
+    </div>
+    <div style="flex:1;min-height:0;overflow:auto;padding:0 12px 16px;display:flex;flex-direction:column;gap:4px">
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+        <div style="flex-shrink:0;display:flex;flex-direction:column;gap:8px;padding:8px 0 10px">
+          <button onClick="{{ g.toggle }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;color:#3F3F46">
+            <span style="width:14px;height:14px;background:#71717A;-webkit-mask:url({{ g.chev }}) center/contain no-repeat;mask:url({{ g.chev }}) center/contain no-repeat"></span>{{ g.label }}<span style="color:#A1A1AA">{{ g.count }}</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+              <sc-for list="{{ g.items }}" as="m" hint-placeholder-count="2">
+                <button onClick="{{ m.select }}" title="{{ m.full }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:7px;height:32px;padding:0 8px;border:1px solid {{ m.border }};border-radius:6px;background:#FFFFFF;min-width:0;box-shadow:0 1px 0 rgba(0,0,0,0.03)" style-hover="background:#FAFAFA">
+                  <span style="width:18px;height:18px;flex:none;border-radius:4px;background:#18181B;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;background:#FFFFFF;-webkit-mask:url({{ m.icon }}) center/contain no-repeat;mask:url({{ m.icon }}) center/contain no-repeat"></span></span>
+                  <span style="font-size:13px;color:#27272A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </aside>
+
+  <section data-screen-label="Pipeline canvas" style="position:relative;min-width:0;min-height:0;overflow:hidden;background-color:#F4F4F5;background-image:radial-gradient(#D4D4D8 1px, transparent 1px);background-size:16px 16px;border-top:1px solid #E4E4E7;border-bottom:1px solid #E4E4E7">
+    <sc-if value="{{ infeasible }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:14px;left:14px;z-index:3;display:flex;align-items:center;gap:7px;height:30px;padding:0 11px;border-radius:6px;background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;font-weight:500"><span style="width:14px;height:14px;background:#B91C1C;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/triangle-alert.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/triangle-alert.svg) center/contain no-repeat"></span>Infeasible: needs 1 more judge. Last valid plan kept.</div>
+    </sc-if>
+    <div style="position:absolute;top:14px;right:14px;z-index:3;display:flex;align-items:center;gap:7px;height:30px;padding:0 11px;border-radius:6px;background:#FFFFFF;border:1px solid #E4E4E7;color:#52525B;font-size:13px">{{ runBadge }}</div>
+    <div style="position:absolute;inset:0;overflow:auto">
+      <div style="width:820px;height:700px;position:relative;transform-origin:0 0;transform:scale({{ zoom }});margin:40px 0 0 24px">
+        <svg width="820" height="700" style="position:absolute;left:0;top:0">
+          <sc-for list="{{ edges }}" as="e" hint-placeholder-count="5">
+            <path d="{{ e.d }}" style="fill:none;stroke:#A1A1AA;stroke-width:1.25"></path>
+          </sc-for>
+          <sc-for list="{{ ports }}" as="p" hint-placeholder-count="10">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="3.5" style="fill:#FFFFFF;stroke:#A1A1AA;stroke-width:1.25"></circle>
+          </sc-for>
+        </svg>
+
+        <div style="position:absolute;left:0;top:250px;width:72px;height:30px;border-radius:7px;background:#2F9E75;color:#FFFFFF;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center">Start</div>
+        <div style="position:absolute;left:720px;top:470px;width:64px;height:30px;border-radius:7px;background:#52525B;color:#FFFFFF;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px">End</div>
+
+        <sc-for list="{{ nodes }}" as="n" hint-placeholder-count="4">
+          <div style="position:absolute;left:{{ n.x }}px;top:{{ n.y }}px;width:{{ n.w }}px">
+            <sc-if value="{{ n.hasTag }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#7C3AED;margin:0 0 4px 2px"><span style="width:12px;height:12px;background:#7C3AED;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/sparkles.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/sparkles.svg) center/contain no-repeat"></span>Model call</span>
+            </sc-if>
+            <button onClick="{{ n.select }}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;background:#FFFFFF;border:1px solid {{ n.border }};border-radius:9px;padding:9px;box-shadow:{{ n.shadow }}">
+              <div style="display:flex;align-items:center;gap:6px;padding:0 2px">
+                <span style="width:12px;height:12px;background:#A1A1AA;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/grip-vertical.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/grip-vertical.svg) center/contain no-repeat"></span>
+                <span style="font-size:13px;font-weight:600;color:#18181B">{{ n.title }}</span>
+                <span style="margin-left:auto;width:15px;height:15px;background:{{ n.statusColor }};-webkit-mask:url({{ n.statusIcon }}) center/contain no-repeat;mask:url({{ n.statusIcon }}) center/contain no-repeat"></span>
+              </div>
+              <sc-if value="{{ n.hasBox }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px solid #E4E4E7;border-radius:6px;padding:6px 8px;display:flex;flex-direction:column;gap:4px">
+                  <span style="align-self:flex-start;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;color:#52525B;background:#F4F4F5;border:1px solid #E4E4E7;border-radius:3px;padding:0 4px">{{ n.boxLabel }}</span>
+                  <span style="font-size:11px;line-height:15px;color:#3F3F46;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">{{ n.boxText }}</span>
+                </div>
+              </sc-if>
+              <sc-for list="{{ n.rows }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:7px;height:26px;padding:0 8px;border:1px solid #E4E4E7;border-radius:6px;background:#FAFAFA">
+                  <span style="width:13px;height:13px;flex:none;background:{{ r.color }};-webkit-mask:url({{ r.icon }}) center/contain no-repeat;mask:url({{ r.icon }}) center/contain no-repeat"></span>
+                  <span style="font-size:11.5px;color:#27272A">{{ r.k }}</span>
+                  <span style="margin-left:auto;font-size:11px;color:{{ r.vfg }};background:{{ r.vbg }};padding:1px 6px;border-radius:4px;white-space:nowrap">{{ r.v }}</span>
+                </div>
+              </sc-for>
+            </button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position:absolute;right:14px;bottom:14px;z-index:3;display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E4E4E7;border-radius:8px;overflow:hidden">
+      <button onClick="{{ zoomIn }}" title="Zoom in" style="all:unset;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #E4E4E7"><span style="width:15px;height:15px;background:#3F3F46;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/plus.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/plus.svg) center/contain no-repeat"></span></button>
+      <button onClick="{{ zoomOut }}" title="Zoom out" style="all:unset;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #E4E4E7"><span style="width:15px;height:15px;background:#3F3F46;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/minus.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/minus.svg) center/contain no-repeat"></span></button>
+      <button onClick="{{ zoomFit }}" title="Reset zoom" style="all:unset;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center"><span style="width:15px;height:15px;background:#3F3F46;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/scan.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/scan.svg) center/contain no-repeat"></span></button>
+    </div>
+  </section>
+
+  <aside data-screen-label="Inspector" style="background:#FFFFFF;border:1px solid #E4E4E7;border-radius:0 10px 10px 0;display:flex;flex-direction:column;min-height:0">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #E4E4E7">
+      <span style="width:16px;height:16px;background:#52525B;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/panel-left.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/panel-left.svg) center/contain no-repeat"></span>
+      <div style="display:flex;background:#F4F4F5;border-radius:7px;padding:2px;margin:0 auto">
+        <sc-for list="{{ inspTabs }}" as="t" hint-placeholder-count="2">
+          <button onClick="{{ t.select }}" style="all:unset;cursor:pointer;padding:5px 14px;border-radius:6px;font-size:13px;font-weight:500;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.shadow }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <span style="width:16px"></span>
+    </div>
+
+    <sc-if value="{{ isInspect }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;min-height:0;overflow:auto;padding:14px 12px 18px;display:flex;flex-direction:column;gap:14px">
+        <div style="flex-shrink:0;display:flex;align-items:center;gap:8px">
+          <span style="width:16px;height:16px;background:#3F3F46;-webkit-mask:url({{ selIcon }}) center/contain no-repeat;mask:url({{ selIcon }}) center/contain no-repeat"></span>
+          <span style="font-size:15px;font-weight:600">{{ selTitle }}</span>
+          <span style="margin-left:auto;font-size:12px;font-weight:500;color:{{ selStatusFg }}">{{ selStatus }}</span>
+        </div>
+        <div style="flex-shrink:0;display:flex;flex-direction:column">
+          <sc-for list="{{ fields }}" as="f" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:32px">
+              <span style="font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">{{ f.k }}</span>
+              <span style="font-size:13px;color:{{ f.fg }};text-align:right">{{ f.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <sc-for list="{{ boxes }}" as="b" hint-placeholder-count="2">
+          <div style="flex-shrink:0;display:flex;flex-direction:column;gap:6px">
+            <span style="align-self:flex-start;font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">{{ b.label }}</span>
+            <div style="border:1px solid #D4D4D8;border-radius:6px;padding:10px;font-size:13px;line-height:19px;color:#27272A;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow:auto;font-family:{{ b.font }}">{{ b.text }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAdd }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-height:0;overflow:auto;padding:14px 12px 18px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;min-height:32px">
+          <span style="font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">Append to</span>
+          <span style="font-size:13px">pack.txt</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="align-self:flex-start;font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">Message, exactly as released</span>
+          <textarea value="{{ draft }}" onChange="{{ onDraft }}" rows="9" placeholder="Paste the new message here" style="border:1px solid #D4D4D8;border-radius:6px;padding:10px;font-size:13px;line-height:19px;color:#27272A;resize:vertical;outline:none"></textarea>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;color:#71717A">Practice messages</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ quick }}" as="q" hint-placeholder-count="3">
+              <button onClick="{{ q.onClick }}" style="all:unset;cursor:pointer;height:26px;padding:0 9px;border:1px solid #E4E4E7;border-radius:6px;font-size:12px;color:{{ q.fg }}" style-hover="background:#F4F4F5">{{ q.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;min-height:32px">
+          <span style="font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">Predicted model calls</span>
+          <span style="font-size:13px">1 · reading</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;min-height:32px">
+          <span style="font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">Command</span>
+          <span style="font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,monospace">python run.py pack.txt</span>
+        </div>
+        <button onClick="{{ send }}" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;height:34px;border-radius:7px;background:{{ sendBg }};color:#FFFFFF;font-size:13px;font-weight:500"><span style="width:14px;height:14px;background:#FFFFFF;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/play.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/play.svg) center/contain no-repeat"></span>{{ sendLabel }}</button>
+      </div>
+    </sc-if>
+  </aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startRun&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:1,&quot;max&quot;:4,&quot;step&quot;:1,&quot;default&quot;:3,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Demo state&quot;}}">
+const I=n=>`https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/${n}.svg`;
+const N=x=>x.toLocaleString('en-US');
+const MODEL='llama-3.1-8b-instant';
+const TIMES=['11:42:15','13:31:07','13:38:44','13:46:02','13:52:30','13:58:11','14:03:40'];
+const AREAS=['venue','schedule','food','judging','budget'];
+const C={ink:'#18181B',mute:'#71717A',green:'#15803D',red:'#B91C1C',blue:'#1D4ED8',grey:'#71717A',amber:'#B45309'};
+const ST={applied:['Applied',C.green],superseded:['Superseded',C.grey],rejected:['Rejected',C.red],request:['Request',C.blue],noimpact:['No impact',C.grey],infeasible:['Applied · infeasible',C.red]};
+const BASE=[
+{from:"Dean's office",ch:'email',date:'9 Nov',status:'applied',text:'Approved: a 4-hour hackathon for 150 students in teams of 3. The budget is Rs 650,000, all in. Ten staff will be on duty. Please keep a 15-minute prayer break in the schedule.',reason:'Authority sets event rules: 150 students, teams of 3, 4 hours, Rs 650,000, 10 staff, 15-minute prayer break.',facts:'students=150\nteam_size=3\nduration_min=240\nbudget=650000\nstaff=10\nblock=prayer, 15 min, required'},
+{from:'Margalla Event Halls',ch:'email',date:'3 Nov',status:'applied',text:'Room D seats 80 at Rs 40,000. Hall A seats 200 at Rs 120,000. Hall B seats 200 at Rs 150,000. Hall C seats 300 at Rs 220,000. Halls B and C have a standby generator.',reason:'Venue owner: four options with seats, price and generator.',facts:'venue Room D, 80, 40000\nvenue Hall A, 200, 120000\nvenue Hall B, 200, 150000, generator\nvenue Hall C, 300, 220000, generator'},
+{from:'Caterer',ch:'whatsapp',date:'20 Oct',status:'superseded',text:'Standard lunch box Rs 1,000 per head.',reason:'Rule 6, stale. Same key from the same owner; the 12 Nov message (4) is newer.',facts:'food standard, 1000'},
+{from:'Caterer',ch:'whatsapp',date:'12 Nov',status:'applied',text:'Salam bhai! Standard lunch box ab Rs 1,200 per head hoga, basic wala Rs 800. Delivery free hai.',reason:'Rule 7, newer value from the owner. Standard Rs 1,200, basic Rs 800, delivery free.',facts:'food standard, 1200\nfood basic, 800\nfee=0'},
+{from:'Judging coordinator',ch:'email',date:'11 Nov',status:'applied',text:'20 judges have confirmed. The honorarium is Rs 5,000 each. A judge needs 15 minutes per team and should cover no more than three teams.',reason:'Coordinator owns judging rules: 20 available, Rs 5,000 each, 15 minutes per team, at most 3 teams per judge.',facts:'judges_available=20\nhonorarium=5000\nmin_per_team=15\nmax_teams_per_judge=3'},
+{from:'Finance',ch:'email',date:'10 Nov',status:'applied',text:'Already ordered from the event budget: prizes Rs 100,000, backup internet Rs 20,000, printing Rs 10,000.',reason:'Finance owns committed spend: prizes, backup internet, printing.',facts:'cost prizes, 100000, committed\ncost internet, 20000, committed\ncost printing, 10000, committed'},
+{from:'Student society',ch:'whatsapp',date:'13 Nov',status:'request',text:'Can we get a DJ for the closing? The quote is Rs 50,000.',reason:'',facts:'cost DJ, 50000, optional'},
+{from:'A judge',ch:'whatsapp',date:'14 Nov',status:'noimpact',text:'I may be 10 minutes late on the day. Traffic on Srinagar Highway.',reason:'Rule 9, no impact. Judging starts at 13:00, so a 10-minute delay changes nothing.',facts:'late judge, 10 min'}
+];
+const SC={
+print:{chip:'Printing Rs 15,000',from:'Finance',ch:'email',date:'18 Nov',status:'applied',text:'Finance here. The printing bill came in at Rs 15,000, not Rs 10,000.',facts:'cost printing, 15000, committed',tok:[548,92],sec:1.184,title:'Printing revised',areas:['budget'],
+ reason:'Rule 7, newer value from the owner. Finance owns committed spend: printing 10,000 → 15,000. Message 6 printing superseded.',
+ out:{msgs:[{i:9,from:'Finance',role:'finance',date:null,facts:[{k:'cost',v:{name:'printing',amount:15000,status:'committed'},q:'printing bill came in at Rs 15,000'}],other:[]}]},
+ res:'msg 9 printing 10,000 → 15,000  APPLIED (rule 7)\nmsg 6 printing=10,000  SUPERSEDED'},
+boxes:{chip:'100 boxes',from:'Caterer',ch:'whatsapp',date:'18 Nov',status:'rejected',text:'Caterer: I have rounded your order down to 100 boxes to keep the cost low.',facts:'claim boxes=100',tok:[541,88],sec:1.107,title:'Caterer, 100 boxes',areas:[],
+ reason:'Rule 2, derived claim. Box count is computed, not set by a vendor: headcount 177 (150 students + 17 judges + 10 staff). Order stays at 177.',
+ out:{msgs:[{i:10,from:'Caterer',role:'caterer',date:null,facts:[{k:'claim',v:{key:'boxes',value:100},q:'rounded your order down to 100 boxes'}],other:[]}]},
+ res:'msg 10 claim boxes=100  REJECTED (rule 2)\nboxes are derived = headcount 177'},
+withdraw:{chip:'4 judges withdrew',from:'Judging coordinator',ch:'email',date:'18 Nov',status:'infeasible',text:'Coordinator here: 4 judges have withdrawn, sorry.',facts:'judges_change=-4',tok:[536,90],sec:1.226,title:'4 judges withdrew',areas:AREAS,
+ reason:'Coordinator owns judge numbers: 20 → 16. The plan needs 17, so no valid plan exists. The change is legitimate and stays applied; the last valid plan is kept.',
+ out:{msgs:[{i:11,from:'Coordinator',role:'judging',date:null,facts:[{k:'judges_change',v:{delta:-4},q:'4 judges have withdrawn'}],other:[]}]},
+ res:'msg 11 judges_available 20 → 16  APPLIED (rule 7)'}
+};
+const PRESETS=['print','boxes','withdraw'];
+const PROMPT='You extract facts for an event planner. Output JSON only, matching the schema.\nRules:\n- One entry per message, in order. Copy sender as written; pick role from the list.\n- Numbers as plain integers. "lakh"=100000, "k"/"hazaar"=1000.\n- Use only keys in the vocabulary. Anything else -> "other".\n- A request -> cost status "optional".\n- Anyone stating a count we compute -> "claim".\n- No arithmetic, no opinions.\n';
+function plan(keys){const printing=keys.includes('print')?15000:10000;const avail=keys.includes('withdraw')?16:20;const committed=120000+printing;const required=committed+120000+85000+212400;const total=required+50000;return{printing,avail,committed,required,total,remaining:650000-total,headroom:650000-required,infeasible:avail<17};}
+const NODEPOS={reader:{x:130,y:110,w:220},resolver:{x:150,y:470,w:200},planner:{x:430,y:110,w:230},checks:{x:440,y:470,w:220}};
+const EDGES=['M72 265 H100 V190 H130','M350 190 H380 V440 H120 V520 H150','M350 520 H400 V160 H430','M545 404 V470','M660 520 H690 V485 H720'];
+const PORTS=[[72,265],[130,190],[350,190],[150,520],[350,520],[430,160],[545,404],[545,470],[660,520],[720,485]];
+
+class Component extends DCLogic {
+  state=this.init();
+  init(){const start=Math.max(1,Math.min(4,this.props.startRun??3));const added=PRESETS.slice(0,start-1).map(k=>({key:k,text:SC[k].text}));return{added,view:start,sel:{t:'node',id:'reader'},insp:'inspect',side:'checks',q:'',closed:{},draft:'',running:false,zoom:1};}
+  componentWillUnmount(){clearTimeout(this.t);}
+  run(r,added){
+    const keys=added.slice(0,r-1).map(a=>a.key);const P=plan(keys);const a=r>1?added[r-2]:null;const sc=a?SC[a.key]:null;const m=a?7+r:null;
+    const tok=r===1?[1012,884]:sc?sc.tok:[522,41];const sec=r===1?6.214:sc?sc.sec:0.982;
+    let cum=0;for(let i=1;i<=r;i++){const b=i>1?added[i-2]:null,s=b?SC[b.key]:null;const k=i===1?[1012,884]:s?s.tok:[522,41];cum+=k[0]+k[1];}
+    const input=PROMPT+(r===1?'Messages:\n1 | Dean\'s office, email | 9 Nov | Approved: a 4-hour hackathon for 150 students…\n… 8 messages, raw text exactly as in the file':'Reuse these existing names: Room D, Hall A, Hall B, Hall C, standard, basic, prizes, internet, printing, DJ\nMessages:\n'+m+' | '+a.text);
+    const output=r===1?{msgs:[{i:1,from:"Dean's office",role:'authority',date:'2026-11-09',facts:[{k:'students',v:150,q:'150 students in teams of 3'},{k:'budget',v:650000,q:'budget is Rs 650,000'}]},'… 7 more messages']}:sc?sc.out:{msgs:[{i:m,from:'Unknown',role:'unknown',facts:[],other:[]}]};
+    const res=r===1?'msg 3 standard=1,000  SUPERSEDED (rule 6)\nmsg 7 DJ 50,000  REQUEST (rule 8)\nmsg 8 late judge  NO IMPACT (rule 9)\nmsgs 1, 2, 4, 5, 6  APPLIED':sc?sc.res:`msg ${m} no facts  NO IMPACT (rule 9)`;
+    const areas=r===1?AREAS:sc?sc.areas:[];
+    return{r,P,a,sc,m,tok,sec,cum,input,output,res,areas,kind:r===1?'full':'update',time:TIMES[Math.min(r-1,TIMES.length-1)]};
+  }
+  download(name,text){const b=new Blob([text],{type:'text/plain'});const u=URL.createObjectURL(b);const el=document.createElement('a');el.href=u;el.download=name;el.click();setTimeout(()=>URL.revokeObjectURL(u),500);}
+  renderVals(){
+    const s=this.state,added=s.added,maxRun=added.length+1,view=Math.min(s.view,maxRun);
+    const runs=Array.from({length:maxRun},(_,i)=>this.run(i+1,added));
+    const R=runs[view-1],P=R.P,keys=added.slice(0,view-1).map(a=>a.key);
+    const printMsg=keys.includes('print')?9+keys.indexOf('print'):6;
+    const checks=[['Correct figures',1],['Within budget',1],['Venue fits',1],['Schedule valid',1],['Enough judges',!P.infeasible],['All areas covered',1]];
+    const pass=checks.filter(c=>c[1]).length;
+    // messages
+    const msgs=BASE.map((m,i)=>({...m,i:i+1}));
+    msgs[6].reason=`Rule 8, request from a non-owner. Optional DJ Rs 50,000, included because it fits after required costs (headroom Rs ${N(P.headroom)}).`;
+    added.slice(0,view-1).forEach((a,j)=>{const i=9+j,sc=SC[a.key];msgs.push(sc?{...sc,i}:{from:'Unknown sender',ch:'pasted',date:'18 Nov',status:'noimpact',text:a.text,reason:'Rule 9, no facts the planner uses. Nothing recomputed.',facts:'none',i});});
+    if(keys.includes('print'))msgs[5].reason+=` Printing later revised by message ${printMsg}.`;
+    const q=s.q.trim().toLowerCase();
+    const selMsg=s.sel.t==='msg'?msgs.find(m=>m.i===s.sel.i):null;
+    const grpOf=st=>st==='infeasible'?'applied':st;
+    const groups=[['applied','Applied'],['rejected','Rejected'],['request','Request'],['superseded','Superseded'],['noimpact','No impact']].map(([id,label])=>{const items=msgs.filter(m=>grpOf(m.status)===id&&(!q||(m.from+' '+m.text).toLowerCase().includes(q)));const open=!s.closed[id];return{id,label,count:items.length,open,chev:I(open?'chevron-down':'chevron-right'),toggle:()=>this.setState(st=>({closed:{...st.closed,[id]:!st.closed[id]}})),items:items.map(m=>({label:`${m.i} · ${m.from}`,full:m.text,icon:I(m.ch==='email'?'mail':m.ch==='whatsapp'?'message-circle':'clipboard'),border:selMsg&&selMsg.i===m.i?'#2563EB':'#E4E4E7',select:()=>this.setState({sel:{t:'msg',i:m.i},insp:'inspect'})}))};}).filter(g=>g.count>0);
+    // nodes
+    const selNode=s.sel.t==='node'?s.sel.id:null;
+    const row=(icon,k,v,o={})=>({icon:I(icon),k,v,color:o.color||'#52525B',vfg:o.vfg||'#3F3F46',vbg:o.vbg||'#F4F4F5'});
+    const ok=I('circle-check'),bad=I('circle-x');
+    const plannerSkipped=R.a&&(R.a.key==='boxes'||!R.sc);
+    const nodeDefs={
+      reader:{title:'Reader',hasTag:true,hasBox:true,boxLabel:'Prompt',boxText:'You extract facts for an event planner. Output JSON only, matching the schema. One entry per message, in order…',rows:[row('cpu','Model',MODEL),row('tag','Area','reading',{vfg:'#1D4ED8',vbg:'#DBEAFE'}),row('coins','Tokens',N(R.tok[0]+R.tok[1]),{vfg:C.amber,vbg:'#FEF3C7'}),row('timer','Elapsed',R.sec.toFixed(3)+' s')],status:true},
+      resolver:{title:'Resolver',rows:[row('shield-check','Authority matrix','code'),row('history','Latest from owner wins','code'),row('calculator','Derived values locked','code')],status:true},
+      planner:{title:'Planner',rows:[row('building-2','Venue','Hall A · 120,000'),row('calendar-clock','Schedule','240 min · 6 blocks'),row('utensils','Food','177 × 1,200'),row('gavel','Judging',`17 of ${P.avail} · 3 rounds`,P.infeasible?{vfg:C.red,vbg:'#FEE2E2'}:{}),row('wallet','Budget',`${N(P.total)} / 650,000`)],status:!P.infeasible},
+      checks:{title:'Six checks',rows:checks.map(([n,o])=>row(o?'check':'x',n,o?'Pass':'Fail',{color:o?C.green:C.red,vfg:o?C.green:C.red,vbg:o?'#DCFCE7':'#FEE2E2'})),status:!P.infeasible}
+    };
+    const nodes=Object.entries(nodeDefs).map(([id,d])=>({...NODEPOS[id],...d,hasTag:!!d.hasTag,hasBox:!!d.hasBox,boxLabel:d.boxLabel||'',boxText:d.boxText||'',statusIcon:d.status?ok:bad,statusColor:d.status?'#16A34A':C.red,border:selNode===id?'#2563EB':'#E4E4E7',shadow:selNode===id?'0 0 0 3px rgba(37,99,235,0.15)':'0 1px 2px rgba(0,0,0,0.05)',select:()=>this.setState({sel:{t:'node',id},insp:'inspect'})}));
+    // inspector
+    let selTitle,selIcon,selStatus,selStatusFg,fields,boxes;
+    const mono="ui-monospace,'SF Mono',Menlo,monospace",sans='Inter,ui-sans-serif,system-ui,sans-serif';
+    if(selMsg){const st=ST[selMsg.status];selTitle=`Message ${selMsg.i}`;selIcon=I(selMsg.ch==='email'?'mail':selMsg.ch==='whatsapp'?'message-circle':'clipboard');selStatus=st[0];selStatusFg=st[1];
+      fields=[['Sender',selMsg.from],['Channel',selMsg.ch==='whatsapp'?'WhatsApp':selMsg.ch],['Date',selMsg.date]];
+      boxes=[{label:'Message',text:selMsg.text,font:sans},{label:'Decision',text:selMsg.reason,font:sans},{label:'Extracted facts',text:selMsg.facts,font:mono}];}
+    else{const id=selNode;selIcon=I({reader:'sparkles',resolver:'scale',planner:'layout-list',checks:'list-checks'}[id]);selTitle=nodeDefs[id].title;const okN=nodeDefs[id].status;selStatus=okN?'Success':'Failed';selStatusFg=okN?C.green:C.red;
+      const runTag=`Run ${view} · ${R.kind} · 18 Nov ${R.time}`;
+      if(id==='reader'){fields=[['Run',runTag],['Model',MODEL],['Area tag','reading'],['Tokens',`${N(R.tok[0])} prompt · ${N(R.tok[1])} completion`],['Elapsed',R.sec.toFixed(3)+' s'],['Session',`${view} calls · ${N(R.cum)} tokens`]];boxes=[{label:'Input',text:R.input,font:sans},{label:'Output',text:JSON.stringify(R.output,null,2),font:mono}];}
+      else if(id==='resolver'){fields=[['Run',runTag],['Runs as','Plain code · 0 tokens'],['Elapsed','0.6 ms']];boxes=[{label:'Decisions',text:R.res,font:mono},{label:'Rule order',text:'1 Ungrounded number → dropped\n2 Derived claim → rejected\n3 No authority → rejected or request\n4 Breaks a standing rule → rejected\n5 Internally inconsistent → rejected\n6 Stale → superseded\n7 Newer from owner → applied\n8 Request from non-owner → optional\n9 No facts → no impact',font:sans}];}
+      else if(id==='planner'){fields=[['Run',runTag],['Runs as','Plain code · 0 tokens'],['Recomputed',R.areas.length?R.areas.join(', '):'nothing'],['Elapsed',plannerSkipped?'skipped':'1.2 ms']];boxes=[{label:'Derived figures',text:`teams = ceil(150 / 3) = 50\njudges needed = ceil(50 / 3) = 17\nrounds = ceil(50 / 17) = 3 → 45 min\nheadcount = 150 + 17 + 10 = 177\nvenue = cheapest with seats ≥ 177 → Hall A\nfood = 177 × 1,200 = 212,400`,font:mono},{label:'Budget',text:`prizes            100,000   msg 6\ninternet           20,000   msg 6\nprinting           ${N(P.printing).padStart(6)}   msg ${printMsg}\nvenue Hall A      120,000   msg 2\njudges 17×5,000    85,000   msg 5\nfood 177×1,200    212,400   msg 4\nrequired          ${N(P.required)}\nDJ (optional)      50,000   msg 7\ntotal             ${N(P.total)}\nremaining          ${N(P.remaining)}`,font:mono},{label:'Schedule',text:'10:00–10:15  Opening and briefing  15\n10:15–12:15  Build               120\n12:15–12:30  Prayer break         15\n12:30–13:00  Lunch                30\n13:00–13:45  Judging, 3 × 15      45\n13:45–14:00  Closing, prizes, DJ  15\nStart 10:00 is a planner assumption.',font:mono},{label:'Judging grid',text:'Team t → judge t mod 17, slot t div 17\nRound 13:00  J1–J17 → teams 1–17\nRound 13:15  J1–J17 → teams 18–34\nRound 13:30  J1–J16 → teams 35–50\n16 judges × 3 teams + 1 judge × 2 teams = 50',font:mono}];}
+      else{fields=[['Run',runTag],['Runs as','Plain code · 0 tokens'],['Result',`${pass} of 6 pass`]];boxes=[{label:P.infeasible?'Why it fails':'Result',text:P.infeasible?'16 judges available, 17 needed (50 teams ÷ max 3 per judge).\nThe last valid plan is shown until one more judge is confirmed.':'All six checks pass. Plan written to out/plan.md.',font:sans}];}}
+    fields=fields.map(([k,v])=>({k,v,fg:'#18181B'}));
+    // side
+    const sideRows=s.side==='checks'?checks.map(([n,o])=>({name:n,icon:I(o?'circle-check':'circle-x'),color:o?'#16A34A':C.red,value:o?'Pass':'Fail',vfg:o?C.green:C.red})):[['users','Headcount','177'],['users-round','Teams','50'],['gavel','Judges',`17 / ${P.avail}`],['wallet','Total',N(P.total)],['piggy-bank','Remaining',N(P.remaining)],['coins','Session tokens',N(R.cum)]].map(r=>({icon:I(r[0]),name:r[1],value:r[2],color:'#71717A',vfg:'#18181B'}));
+    const sideTabs=[['checks','Checks'],['figures','Figures']].map(([id,label])=>{const on=s.side===id;return{label,bg:on?'#FFFFFF':'transparent',fg:on?'#18181B':'#71717A',shadow:on?'0 1px 2px rgba(0,0,0,0.08)':'none',select:()=>this.setState({side:id})};});
+    const runList=runs.map(r=>{let icon='flag',color='#16A34A',label='Run 1 · Full run';if(r.r>1){label=`Run ${r.r} · ${r.sc?r.sc.title:'Pasted message'}`;const k=r.a.key;icon=k==='boxes'?'octagon-x':k==='withdraw'?'triangle-alert':k==='print'?'circle-check':'circle-minus';color=k==='boxes'||k==='withdraw'?'#DC2626':k==='print'?'#16A34A':'#71717A';}return{label,icon:I(icon),color,bg:r.r===view?'#F4F4F5':'transparent',select:()=>this.setState({view:r.r})};});
+    const rail=[['inspect','workflow','Pipeline'],['add','message-square-plus','Add message']].map(([id,icon,label])=>({icon:I(icon),label,bg:s.insp===id?'#E4E4E7':'transparent',fg:s.insp===id?'#18181B':'#52525B',select:()=>this.setState({insp:id})}));
+    const inspTabs=[['inspect','Inspector'],['add','Add message']].map(([id,label])=>{const on=s.insp===id;return{label,bg:on?'#FFFFFF':'transparent',fg:on?'#18181B':'#71717A',shadow:on?'0 1px 2px rgba(0,0,0,0.08)':'none',select:()=>this.setState({insp:id})};});
+    const addedKeys=added.map(a=>a.key);
+    const quick=PRESETS.map(k=>{const used=addedKeys.includes(k);return{label:SC[k].chip,fg:used?'#A1A1AA':'#27272A',onClick:()=>!used&&this.setState({draft:SC[k].text})};});
+    const can=!!s.draft.trim()&&!s.running;
+    const traceTxt=runs.map(r=>[`=== RUN ${r.r} · ${r.kind} · 18 Nov ${r.time} ===`,`[#${r.r}] model=${MODEL}  area=reading`,'  INPUT : '+r.input,'  OUTPUT: '+JSON.stringify(r.output),`  TOKENS: prompt ${r.tok[0]} · completion ${r.tok[1]} · total ${r.tok[0]+r.tok[1]}   (reported by API)`,...r.res.split('\n').map(l=>'[code] resolver  '+l),`[code] recompute ${r.areas.length?r.areas.join(', '):'none'}`,`[code] checks    ${r.P.infeasible?'5/6 enough judges FAIL':'6/6 PASS total '+N(r.P.total)}`,`--- run tokens ${r.tok[0]+r.tok[1]} · calls 1 · cumulative tokens ${r.cum} · cumulative calls ${r.r} ---`].join('\n')).join('\n\n');
+    const L=runs[runs.length-1].P;
+    const planMd=`# Hackathon plan\n\nHeadcount 177 · Teams 50 · Judges 17/${L.avail}\nVenue: Hall A (Rs 120,000)\nFood: standard × 177 = Rs 212,400\nJudging: 17 judges, 3 rounds × 15 min, 13:00–13:45\nBudget: Rs ${N(L.total)} of 650,000 (remaining ${N(L.remaining)})\nChecks: ${L.infeasible?5:6}/6\n`;
+    return{
+      fileMeta:`${8+added.length} messages`,checksLabel:`${pass}/6 checks`,checksBg:pass===6?'#DCFCE7':'#FEE2E2',checksFg:pass===6?C.green:C.red,checksIcon:I(pass===6?'circle-check':'circle-x'),
+      dlPlan:()=>this.download('plan.md',planMd),dlTrace:()=>this.download('trace.txt',traceTxt),
+      rail,runs:runList,goAdd:()=>this.setState({insp:'add'}),sideTabs,sideRows,
+      q:s.q,onQ:e=>this.setState({q:e.target.value}),groups,
+      infeasible:P.infeasible,runBadge:s.running?`Running update · reading call #${maxRun+1}…`:`Run ${view} of ${maxRun} · ${N(R.tok[0]+R.tok[1])} tokens · ${(R.sec+0.005).toFixed(3)} s`,
+      zoom:s.zoom,zoomIn:()=>this.setState(st=>({zoom:Math.min(1.5,+(st.zoom+0.1).toFixed(2))})),zoomOut:()=>this.setState(st=>({zoom:Math.max(0.6,+(st.zoom-0.1).toFixed(2))})),zoomFit:()=>this.setState({zoom:1}),
+      edges:EDGES.map(d=>({d})),ports:PORTS.map(([x,y])=>({x,y})),nodes,
+      inspTabs,isInspect:s.insp==='inspect',isAdd:s.insp==='add',selTitle,selIcon,selStatus,selStatusFg,fields,boxes,
+      draft:s.draft,onDraft:e=>this.setState({draft:e.target.value}),quick,sendBg:can?'#2563EB':'#A1A1AA',sendLabel:s.running?'Running…':'Run update',
+      send:()=>{if(!can)return;const text=s.draft.trim();const key=PRESETS.find(k=>SC[k].text===text&&!addedKeys.includes(k))||'custom';this.setState({running:true});this.t=setTimeout(()=>this.setState(st=>{const a=[...st.added,{key,text}];return{added:a,view:a.length+1,draft:'',running:false,insp:'inspect',sel:{t:'node',id:'resolver'}};}),1200);}
+    };
+  }
+}
+</script>
+</body>
+</html>

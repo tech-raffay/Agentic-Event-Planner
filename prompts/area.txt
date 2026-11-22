@@ -1,0 +1,5 @@
+Map one event-planning constraint to planner facts. Reply with JSON only: {"facts":[{"k":"<key>","v":{...},"q":"<=8-word quote"}],"note":"short"}
+Allowed: venue {name,features:[...]} (a feature some named venues have) | venue_require {feature} | venue_exclude {name} | seat_factor {pct} | block {name,min,at:"HH:MM",required:true} | window {what,from:"HH:MM",until:"HH:MM"} | late {who,min} | food_require {name} | diet {type,n or pct} | extra_people {who,n} | reserve {amount or pct} | cost {name,amount,basis:"fixed"|"per_head"|"per_team"|"per_judge"|"pct_of:venue"|"pct_of:food"|"pct_of:all",status:"committed"|"required"|"optional"}
+If it cannot be expressed, return "facts":[] and say why in note. No arithmetic.
+Area: {area}. Sender role: {role}.
+Constraint: "{text}"

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#F6F5F1;color:#1A1C21;font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased}a{color:#1A1C21}a:hover{color:#8A5300}*{box-sizing:border-box}textarea,button{font-family:inherit}</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;align-items:stretch">
+
+<aside style="flex:0 0 280px;max-width:100%;background:#FFFFFF;border-right:1px solid #E3E1DA;padding:22px 20px;display:flex;flex-direction:column;gap:26px">
+  <a href="Brand Guide.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <div style="width:28px;height:28px;border-radius:6px;background:#1A1C21;position:relative;flex:none"><div style="position:absolute;left:6px;top:6px;width:8px;height:8px;border-radius:50%;background:#F0B54A"></div></div>
+    <div style="display:flex;flex-direction:column;line-height:1.1"><span style="font-weight:700;font-size:15px;color:#1A1C21">Mind to Machine</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#565A63;letter-spacing:0.08em;text-transform:uppercase">Planner Agent</span></div>
+  </a>
+
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Input file</span>
+    <div style="background:#F6F5F1;border:1px solid #E3E1DA;border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">pack.txt</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63">{{ fileMeta }}</span>
+    </div>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63">$ python run.py pack.txt</span>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Runs</span>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <sc-for list="{{ runs }}" as="r" hint-placeholder-count="3">
+        <button onClick="{{ r.select }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;background:{{ r.bg }};border:1px solid {{ r.border }}">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;width:44px">Run {{ r.n }}</span>
+          <span style="font-size:13px;color:#565A63;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span>
+          <span style="width:8px;height:8px;border-radius:50%;background:{{ r.dot }};flex:none"></span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Add a message</span>
+    <textarea value="{{ draft }}" onChange="{{ onDraft }}" placeholder="Paste the new message exactly as released…" rows="5" style="width:100%;resize:vertical;border:1px solid #E3E1DA;border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.45;color:#1A1C21;background:#FFFFFF;outline:none"></textarea>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <sc-for list="{{ quick }}" as="q" hint-placeholder-count="3">
+        <button onClick="{{ q.onClick }}" style="all:unset;cursor:pointer;font-size:12px;padding:5px 9px;border-radius:999px;border:1px solid #E3E1DA;color:{{ q.fg }};background:#F6F5F1">{{ q.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63;gap:8px">
+      <span>Predicted calls</span>
+      <span style="display:flex;gap:6px;align-items:center"><span>1 ×</span><span style="background:#FCF1DC;color:#8A5300;padding:2px 6px;border-radius:4px;font-weight:600">reading</span></span>
+    </div>
+    <button onClick="{{ addMessage }}" style="all:unset;cursor:pointer;text-align:center;padding:11px 14px;border-radius:8px;font-weight:600;font-size:14px;background:{{ addBg }};color:{{ addFg }}">{{ addLabel }}</button>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:auto">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Outputs</span>
+    <div style="display:flex;gap:8px">
+      <button onClick="{{ dlPlan }}" style="all:unset;cursor:pointer;flex:1;text-align:center;border:1px solid #E3E1DA;border-radius:8px;padding:9px;font-size:13px;font-weight:600" style-hover="background:#F6F5F1">plan.md ↓</button>
+      <button onClick="{{ dlTrace }}" style="all:unset;cursor:pointer;flex:1;text-align:center;border:1px solid #E3E1DA;border-radius:8px;padding:9px;font-size:13px;font-weight:600" style-hover="background:#F6F5F1">trace.txt ↓</button>
+    </div>
+  </div>
+</aside>
+
+<main style="flex:1 1 0;min-width:min(100%,480px);display:flex;flex-direction:column">
+  <div style="background:#FFFFFF;border-bottom:1px solid #E3E1DA;padding:18px 28px;display:flex;flex-direction:column;gap:16px;position:sticky;top:0;z-index:5">
+    <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end">
+      <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">{{ k.label }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;color:{{ k.fg }};letter-spacing:-0.01em">{{ k.value }}</span>
+          <span style="font-size:12px;color:#565A63">{{ k.sub }}</span>
+        </div>
+      </sc-for>
+      <div style="margin-left:auto;display:flex;flex-direction:column;gap:2px;align-items:flex-end">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">{{ runTitle }}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#FCF1DC;color:#8A5300;padding:3px 8px;border-radius:5px;font-weight:600">{{ sessionTok }}</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;margin-right:6px;color:{{ checksFg }}">{{ checksLabel }}</span>
+      <sc-for list="{{ checks }}" as="c" hint-placeholder-count="6">
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 9px;border-radius:6px;background:{{ c.bg }};color:{{ c.fg }}">{{ c.mark }} {{ c.name }}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+    <div style="margin:16px 28px 0;background:#FCF1DC;border:1px solid #F3DDB0;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:#8A5300">
+      <span style="width:8px;height:8px;border-radius:50%;background:#F0B54A"></span><span>{{ runningText }}</span>
+    </div>
+  </sc-if>
+  <sc-if value="{{ infeasible }}" hint-placeholder-val="{{ false }}">
+    <div style="margin:16px 28px 0;background:#FBE6E3;border:1px solid #F1C3BD;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:15px;font-weight:700;color:#B42318">Infeasible · needs 1 more judge</span>
+      <span style="font-size:14px;color:#7A1A12;line-height:1.45">{{ infeasibleText }}</span>
+    </div>
+  </sc-if>
+  <sc-if value="{{ olderView }}" hint-placeholder-val="{{ false }}">
+    <div style="margin:16px 28px 0;background:#FFFFFF;border:1px solid #E3E1DA;border-radius:8px;padding:10px 14px;font-size:13px;color:#565A63;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span>{{ olderText }}</span><button onClick="{{ goLatest }}" style="all:unset;cursor:pointer;font-weight:600;color:#1A1C21;text-decoration:underline">Go to latest</button>
+    </div>
+  </sc-if>
+
+  <nav style="display:flex;gap:4px;padding:16px 28px 0;border-bottom:1px solid #E3E1DA;overflow-x:auto;scrollbar-width:none">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+      <button onClick="{{ t.select }}" style="all:unset;cursor:pointer;padding:10px 12px;font-size:14px;font-weight:600;color:{{ t.fg }};border-bottom:2px solid {{ t.line }};display:flex;gap:8px;align-items:center;white-space:nowrap">{{ t.label }}<span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;background:#ECEBE6;padding:1px 6px;border-radius:999px">{{ t.count }}</span></button>
+    </sc-for>
+  </nav>
+
+  <div style="padding:24px 28px 64px;display:flex;flex-direction:column;gap:20px">
+
+  <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px">
+      <section data-screen-label="Plan · Venue" style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Venue</span><sc-if value="{{ showSrc }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;border:1px dashed #C9C6BD;padding:1px 6px;border-radius:4px">msg 2</span></sc-if></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:28px;font-weight:600;letter-spacing:-0.01em">Hall A</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px">Rs 120,000</span></div>
+        <p style="margin:0;font-size:14px;color:#565A63;line-height:1.5">Cheapest available option with seats ≥ 177 and every required feature. 200 seats, 23 spare.</p>
+        <div style="display:flex;flex-direction:column;border-top:1px solid #EDEBE5">
+          <sc-for list="{{ venues }}" as="v" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 56px 96px;gap:10px;padding:9px 0;border-bottom:1px solid #EDEBE5;align-items:center;font-size:14px">
+              <span style="display:flex;flex-direction:column;gap:1px"><span style="font-weight:{{ v.weight }}">{{ v.name }}</span><span style="font-size:12px;color:{{ v.verdictFg }}">{{ v.verdict }}</span></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;color:#565A63">{{ v.seats }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right">{{ v.price }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section data-screen-label="Plan · Food" style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Food</span><sc-if value="{{ showSrc }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;border:1px dashed #C9C6BD;padding:1px 6px;border-radius:4px">msg 4</span></sc-if></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:28px;font-weight:600;letter-spacing:-0.01em">Standard lunch box</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px">Rs 212,400</span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#565A63">Boxes</span><span style="font-family:'JetBrains Mono',monospace;font-size:20px">177</span><span style="font-size:12px;color:#565A63">= headcount</span></div>
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#565A63">Per head</span><span style="font-family:'JetBrains Mono',monospace;font-size:20px">1,200</span><span style="font-size:12px;color:#565A63">12 Nov price</span></div>
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#565A63">Delivery</span><span style="font-family:'JetBrains Mono',monospace;font-size:20px">0</span><span style="font-size:12px;color:#565A63">free</span></div>
+        </div>
+        <div style="border-top:1px solid #EDEBE5;padding-top:12px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#565A63;line-height:1.45">
+          <span>Basic tier Rs 800 → Rs 141,600. Held as the fallback lever if the budget tightens.</span>
+          <span style="text-decoration:line-through">Standard Rs 1,000 (20 Oct, msg 3) superseded.</span>
+        </div>
+      </section>
+    </div>
+
+    <section data-screen-label="Plan · Schedule" style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Schedule · 240 min</span><span style="font-size:12px;color:#565A63">Start 10:00 is a planner assumption (no start time in the pack)</span></div>
+      <div style="display:flex;height:44px;border-radius:8px;overflow:hidden;gap:2px">
+        <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+          <div title="{{ b.name }}" style="flex:{{ b.min }} 1 0;background:{{ b.bg }};color:{{ b.fg }};font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;align-items:center;padding:0 8px;overflow:hidden;white-space:nowrap">{{ b.min }}′</div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:110px 14px minmax(0,1fr) 60px 130px;gap:10px;padding:8px 0;border-top:1px solid #EDEBE5;align-items:center;font-size:14px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ b.time }}</span>
+            <span style="width:10px;height:10px;border-radius:3px;background:{{ b.bg }};border:1px solid #D9D6CC"></span>
+            <span style="font-weight:500">{{ b.name }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right">{{ b.min }} min</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63;text-align:right">{{ b.src }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section data-screen-label="Plan · Judging" style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Judging · 17 judges × 3 rounds</span><sc-if value="{{ showSrc }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;border:1px dashed #C9C6BD;padding:1px 6px;border-radius:4px">msg 5 · derived</span></sc-if></div>
+      <div style="display:flex;flex-wrap:wrap;gap:28px;font-size:14px;color:#565A63">
+        <span><span style="font-family:'JetBrains Mono',monospace;color:#1A1C21">ceil(50 ÷ 3) = 17</span> judges needed</span>
+        <span><span style="font-family:'JetBrains Mono',monospace;color:#1A1C21">{{ standby }}</span></span>
+        <span><span style="font-family:'JetBrains Mono',monospace;color:#1A1C21">3 × 15 = 45 min</span> block</span>
+      </div>
+      <div style="overflow-x:auto">
+        <div style="display:grid;grid-template-columns:72px repeat(17,minmax(40px,1fr));gap:3px;min-width:820px">
+          <span></span>
+          <sc-for list="{{ judgeCols }}" as="j" hint-placeholder-count="17">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;text-align:center;padding:4px 0">{{ j }}</span>
+          </sc-for>
+          <sc-for list="{{ rounds }}" as="r" hint-placeholder-count="3">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63;display:flex;align-items:center">{{ r.time }}</span>
+            <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="17">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;text-align:center;padding:8px 0;border-radius:5px;background:{{ c.bg }};color:{{ c.fg }}">{{ c.t }}</span>
+            </sc-for>
+          </sc-for>
+        </div>
+      </div>
+      <span style="font-size:13px;color:#565A63">Team t → judge t mod 17, slot t div 17. 16 judges × 3 teams + 1 judge × 2 teams = 50.</span>
+    </section>
+
+    <section data-screen-label="Plan · Budget" style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Budget · Rs 650,000</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ budgetHead }}</span></div>
+      <div style="display:flex;height:16px;border-radius:5px;overflow:hidden;gap:2px">
+        <sc-for list="{{ bar }}" as="s" hint-placeholder-count="6">
+          <div title="{{ s.label }}" style="flex:{{ s.v }} 1 0;background:{{ s.bg }}"></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px">
+        <sc-for list="{{ bar }}" as="s" hint-placeholder-count="6">
+          <span style="display:flex;gap:6px;align-items:center;font-size:12px;color:#565A63"><span style="width:10px;height:10px;border-radius:3px;background:{{ s.bg }};border:1px solid #D9D6CC"></span>{{ s.label }}</span>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ budgetRows }}" as="b" hint-placeholder-count="10">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 120px 64px 110px;gap:10px;padding:9px 0;border-top:1px solid {{ b.line }};align-items:center;font-size:14px;font-weight:{{ b.weight }};background:{{ b.bg }}">
+            <span>{{ b.label }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63;font-weight:400">{{ b.basis }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;font-weight:400">{{ b.src }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:14px;text-align:right;color:{{ b.fg }}">{{ b.amount }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ isMessages }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Messages" style="display:flex;flex-wrap:wrap;gap:6px">
+      <sc-for list="{{ msgFilters }}" as="f" hint-placeholder-count="6">
+        <button onClick="{{ f.select }}" style="all:unset;cursor:pointer;font-size:13px;font-weight:600;padding:6px 11px;border-radius:999px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }}">{{ f.label }} · {{ f.count }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ ledger }}" as="m" hint-placeholder-count="8">
+        <article style="background:#FFFFFF;border:1px solid {{ m.border }};border-radius:12px;padding:18px 20px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#565A63">{{ m.i }}</span>
+          <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+              <span style="font-weight:600;font-size:15px">{{ m.from }}</span>
+              <span style="font-size:13px;color:#565A63">{{ m.ch }} · {{ m.date }}</span>
+              <span style="margin-left:auto;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</span>
+            </div>
+            <p style="margin:0;font-size:14px;line-height:1.5;color:#565A63;text-wrap:pretty">“{{ m.text }}”</p>
+            <div style="background:#F6F5F1;border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.5;color:#1A1C21">{{ m.reason }}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+              <sc-for list="{{ m.facts }}" as="x" hint-placeholder-count="3">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:3px 7px;border-radius:5px;border:1px solid #E3E1DA;color:{{ x.fg }};text-decoration:{{ x.deco }}">{{ x.t }}</span>
+              </sc-for>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#7C7F86;margin-left:auto">q: “{{ m.quote }}”</span>
+            </div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isTrace }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Trace" style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ traceRunFilters }}" as="f" hint-placeholder-count="3">
+          <button onClick="{{ f.select }}" style="all:unset;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;padding:6px 10px;border-radius:6px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ traceTypeFilters }}" as="f" hint-placeholder-count="3">
+          <button onClick="{{ f.select }}" style="all:unset;cursor:pointer;font-size:13px;font-weight:600;padding:6px 10px;border-radius:6px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63">Tokens are copied from the API usage fields.</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <sc-for list="{{ traceBlocks }}" as="tb" hint-placeholder-count="2">
+        <section style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;overflow:hidden">
+          <div style="padding:12px 18px;border-bottom:1px solid #E3E1DA;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;background:#F6F5F1">{{ tb.head }}</div>
+          <div style="display:flex;flex-direction:column;padding:10px 12px;gap:4px">
+            <sc-for list="{{ tb.items }}" as="it" hint-placeholder-count="5">
+              <sc-if value="{{ it.isCall }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#FCF1DC;border:1px solid #F3DDB0;border-radius:8px;display:flex;flex-direction:column;margin:4px 0">
+                  <button onClick="{{ it.toggle }}" style="all:unset;cursor:pointer;padding:10px 12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:13px">
+                    <span style="font-weight:600">#{{ it.num }}</span>
+                    <span>model={{ it.model }}</span>
+                    <span style="background:#F0B54A;padding:1px 7px;border-radius:4px;font-weight:600">{{ it.area }}</span>
+                    <span style="margin-left:auto;color:#8A5300">prompt {{ it.p }} · completion {{ it.c }} · total {{ it.t }}</span>
+                    <span style="color:#8A5300">{{ it.caret }}</span>
+                  </button>
+                  <sc-if value="{{ it.open }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px;padding:0 12px 12px">
+                      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A5300;font-weight:600">INPUT</span><pre style="margin:0;background:#FFFFFF;border:1px solid #F3DDB0;border-radius:6px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;max-height:260px;overflow:auto">{{ it.input }}</pre></div>
+                      <div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A5300;font-weight:600">OUTPUT</span><pre style="margin:0;background:#FFFFFF;border:1px solid #F3DDB0;border-radius:6px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;max-height:260px;overflow:auto">{{ it.output }}</pre></div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ it.isCode }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;grid-template-columns:56px 92px minmax(0,1fr);gap:8px;padding:4px 6px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.5">
+                  <span style="color:#7C7F86">[code]</span><span style="color:#565A63">{{ it.tag }}</span><span style="color:{{ it.fg }}">{{ it.text }}</span>
+                </div>
+              </sc-if>
+            </sc-for>
+          </div>
+          <div style="padding:10px 18px;border-top:1px solid #E3E1DA;font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63">{{ tb.foot }}</div>
+        </section>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isChanges }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ noChanges }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Changes · empty" style="background:#FFFFFF;border:1px dashed #C9C6BD;border-radius:12px;padding:36px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center">
+        <span style="font-weight:600;font-size:16px">Run 1 is the baseline</span>
+        <span style="font-size:14px;color:#565A63">Paste a new message in the sidebar. Each update run gets a diff here.</span>
+      </div>
+    </sc-if>
+    <div data-screen-label="Changes" style="display:flex;flex-direction:column;gap:14px">
+      <sc-for list="{{ changes }}" as="ch" hint-placeholder-count="2">
+        <section style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">Run {{ ch.n }}</span>
+            <span style="font-weight:600;font-size:15px">{{ ch.title }}</span>
+            <span style="margin-left:auto;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:{{ ch.bg }};color:{{ ch.fg }}">{{ ch.result }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Facts</span>
+              <sc-for list="{{ ch.facts }}" as="x" hint-placeholder-count="1">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;display:flex;gap:8px;flex-wrap:wrap"><span style="color:#565A63">{{ x.k }}</span><span style="text-decoration:line-through;color:#7C7F86">{{ x.from }}</span><span>→</span><span style="color:{{ x.fg }};font-weight:600">{{ x.to }}</span></div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Areas recomputed (code)</span>
+              <div style="display:flex;flex-wrap:wrap;gap:5px">
+                <sc-for list="{{ ch.areas }}" as="a" hint-placeholder-count="5">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:3px 8px;border-radius:5px;background:{{ a.bg }};color:{{ a.fg }};border:1px solid {{ a.border }}">{{ a.name }}</span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Model calls</span>
+              <div style="display:flex;gap:6px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:13px"><span>1 ×</span><span style="background:#FCF1DC;color:#8A5300;padding:2px 7px;border-radius:4px;font-weight:600">reading</span><span style="color:#565A63">{{ ch.tok }}</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;border-top:1px solid #EDEBE5">
+            <sc-for list="{{ ch.deltas }}" as="d" hint-placeholder-count="2">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 120px 20px 120px;gap:8px;padding:8px 0;border-bottom:1px solid #EDEBE5;font-size:14px;align-items:center">
+                <span>{{ d.label }}</span><span style="font-family:'JetBrains Mono',monospace;text-align:right;color:#565A63">{{ d.from }}</span><span style="text-align:center;color:#565A63">→</span><span style="font-family:'JetBrains Mono',monospace;text-align:right;font-weight:600;color:{{ d.fg }}">{{ d.to }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isTerminal }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Terminal" style="background:#14161A;border-radius:12px;overflow:hidden">
+      <div style="display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid #2A2D33;align-items:center">
+        <span style="width:10px;height:10px;border-radius:50%;background:#3A3D44"></span><span style="width:10px;height:10px;border-radius:50%;background:#3A3D44"></span><span style="width:10px;height:10px;border-radius:50%;background:#3A3D44"></span>
+        <span style="margin-left:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#A9ACB3">python run.py pack.txt</span>
+      </div>
+      <div style="padding:16px 18px;display:flex;flex-direction:column;overflow-x:auto">
+        <sc-for list="{{ termLines }}" as="l" hint-placeholder-count="12">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.65;white-space:pre;color:{{ l.c }};font-weight:{{ l.w }}">{{ l.t }}</span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  </div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startRun&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:1,&quot;max&quot;:4,&quot;step&quot;:1,&quot;default&quot;:3,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;initialTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;plan&quot;,&quot;messages&quot;,&quot;trace&quot;,&quot;changes&quot;,&quot;terminal&quot;],&quot;default&quot;:&quot;plan&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;showSourceTags&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Display&quot;}}">
+const ST={applied:['Applied','#1E7A4C','#E2F1E8'],superseded:['Superseded','#5F6269','#ECEBE6'],rejected:['Rejected','#B42318','#FBE6E3'],request:['Request · included','#2456B8','#E4EBFA'],noimpact:['No impact','#5F6269','#ECEBE6']};
+const N=x=>x.toLocaleString('en-US');
+const MODEL='llama-3.1-8b-instant';
+const TIMES=['11:42:15','13:31:07','13:38:44','13:46:02','13:52:30','13:58:11','14:03:40','14:09:02'];
+const AREAS=['venue','schedule','food','judging','budget'];
+const BASE=[
+{from:"Dean's office",ch:'email',date:'9 Nov',status:'applied',text:'Approved: a 4-hour hackathon for 150 students in teams of 3. The budget is Rs 650,000, all in. Ten staff will be on duty. Please keep a 15-minute prayer break in the schedule.',quote:'150 students in teams of 3',reason:'Authority owns event rules: students 150, team size 3, 4 h, budget Rs 650,000, staff 10, prayer break 15 min.',facts:['students=150','team_size=3','duration_min=240','budget=650,000','staff=10','block prayer·15·req']},
+{from:'Margalla Event Halls',ch:'email',date:'3 Nov',status:'applied',text:'Room D seats 80 at Rs 40,000. Hall A seats 200 at Rs 120,000. Hall B seats 200 at Rs 150,000. Hall C seats 300 at Rs 220,000. Halls B and C have a standby generator.',quote:'Hall A seats 200 at Rs 120,000',reason:'Venue owner: four options with seats, price and generator feature.',facts:['venue Room D·80·40,000','venue Hall A·200·120,000','venue Hall B·200·150,000·generator','venue Hall C·300·220,000·generator']},
+{from:'Caterer',ch:'WhatsApp',date:'20 Oct',status:'superseded',text:'Standard lunch box Rs 1,000 per head.',quote:'Standard lunch box Rs 1,000',reason:'Rule 6 · stale. Same key (standard box price) from the same owner; newer message dated 12 Nov (msg 4) stands.',facts:['food standard·1,000'],dead:true},
+{from:'Caterer',ch:'WhatsApp',date:'12 Nov',status:'applied',text:'Salam bhai! Standard lunch box ab Rs 1,200 per head hoga, basic wala Rs 800. Delivery free hai.',quote:'Standard lunch box ab Rs 1,200',reason:'Rule 7 · newer value from the owner. Standard Rs 1,200, basic Rs 800, delivery Rs 0. Msg 3 superseded.',facts:['food standard·1,200','food basic·800','fee=0']},
+{from:'Judging coordinator',ch:'email',date:'11 Nov',status:'applied',text:'20 judges have confirmed. The honorarium is Rs 5,000 each. A judge needs 15 minutes per team and should cover no more than three teams.',quote:'no more than three teams',reason:'Judging coordinator owns judging rules: 20 available, Rs 5,000 each, 15 min per team, max 3 teams per judge.',facts:['judges_available=20','honorarium=5,000','min_per_team=15','max_teams_per_judge=3']},
+{from:'Finance',ch:'email',date:'10 Nov',status:'applied',text:'Already ordered from the event budget: prizes Rs 100,000, backup internet Rs 20,000, printing Rs 10,000.',quote:'prizes Rs 100,000, backup internet Rs 20,000',reason:'Finance owns committed costs: prizes 100,000, internet 20,000, printing 10,000.',facts:['cost prizes·100,000·committed','cost internet·20,000·committed','cost printing·10,000·committed']},
+{from:'Student society',ch:'WhatsApp',date:'13 Nov',status:'request',text:'Can we get a DJ for the closing? The quote is Rs 50,000.',quote:'Can we get a DJ',reason:'',facts:['cost DJ·50,000·optional']},
+{from:'A judge',ch:'WhatsApp',date:'14 Nov',status:'noimpact',text:'I may be 10 minutes late on the day. Traffic on Srinagar Highway.',quote:'I may be 10 minutes late',reason:'Rule 9 · no impact. Judge up to 10 min late; judging starts at 13:00 (+3:00), so no block is affected.',facts:['late judge·10']}
+];
+const SC={
+print:{chip:'Printing Rs 15,000',from:'Finance',ch:'email',date:'18 Nov',status:'applied',text:'Finance here. The printing bill came in at Rs 15,000, not Rs 10,000.',quote:'printing bill came in at Rs 15,000',facts:['cost printing·15,000·committed'],tok:[548,92],title:'Finance · printing bill',
+ reason:()=>'Rule 7 · newer value from the owner. Finance owns committed costs: printing 10,000 → 15,000. Old fact in msg 6 superseded.',
+ out:'{"msgs":[{"i":9,"from":"Finance","role":"finance","date":null,"facts":[{"k":"cost","v":{"name":"printing","amount":15000,"basis":"fixed","status":"committed"},"q":"printing bill came in at Rs 15,000"}],"other":[]}]}'},
+boxes:{chip:'100 boxes',from:'Caterer',ch:'WhatsApp',date:'18 Nov',status:'rejected',text:'Caterer: I have rounded your order down to 100 boxes to keep the cost low.',quote:'rounded your order down to 100 boxes',facts:['claim boxes=100'],tok:[541,88],title:'Caterer · order quantity',
+ reason:()=>'Rule 2 · derived claim. Caterer set boxes = 100; boxes are derived = headcount 177 (150 students + 17 judges + 10 staff). Order stays 177.',
+ out:'{"msgs":[{"i":10,"from":"Caterer","role":"caterer","date":null,"facts":[{"k":"claim","v":{"key":"boxes","value":100},"q":"rounded your order down to 100 boxes"}],"other":[]}]}'},
+withdraw:{chip:'4 judges withdrew',from:'Judging coordinator',ch:'email',date:'18 Nov',status:'applied',text:'Coordinator here: 4 judges have withdrawn, sorry.',quote:'4 judges have withdrawn',facts:['judges_change=−4'],tok:[536,90],title:'Coordinator · judges withdrew',
+ reason:()=>'Judging coordinator owns judges available: 20 → 16. 17 are needed, so no valid plan exists. The change is legitimate, so it is applied and the last valid plan is kept.',
+ out:'{"msgs":[{"i":11,"from":"Coordinator","role":"judging","date":null,"facts":[{"k":"judges_change","v":{"delta":-4},"q":"4 judges have withdrawn"}],"other":[]}]}'}
+};
+const PRESETS=['print','boxes','withdraw'];
+const PROMPT_HEAD='You extract facts for an event planner. Output JSON only, matching the schema.\nRules:\n- One entry per message, in order. Copy sender as written; pick role from the list.\n- Numbers as plain integers … (450-token prompt, invented examples only)\n';
+function plan(keys){const printing=keys.includes('print')?15000:10000;const avail=keys.includes('withdraw')?16:20;const committed=130000-10000+printing;const required=committed+120000+85000+212400;const total=required+50000;return{printing,avail,committed,required,total,remaining:650000-total,headroom:650000-required,infeasible:avail<17};}
+
+class Component extends DCLogic {
+  state=this.init();
+  init(){const start=Math.max(1,Math.min(4,this.props.startRun??3));const added=PRESETS.slice(0,start-1).map(k=>({key:k,text:SC[k].text}));return{added,view:start,tab:this.props.initialTab??'plan',msgFilter:'all',traceRun:'all',traceType:'all',open:{},draft:'',running:false};}
+  componentWillUnmount(){clearTimeout(this.t);}
+  traceFor(r,added){
+    const keysUpTo=i=>added.slice(0,i-1).map(a=>a.key);
+    const P=plan(keysUpTo(r)),Pp=plan(keysUpTo(r-1));
+    const cum=this.tokensUpTo(r,added);
+    const code=(tag,text,tone)=>({isCode:true,isCall:false,tag,text,fg:tone==='bad'?'#B42318':tone==='good'?'#1E7A4C':'#565A63'});
+    if(r===1){
+      return{n:1,head:`=== RUN 1 · full · 8 messages · 18 Nov ${TIMES[0]} ===`,call:{num:1,p:1012,c:884,input:PROMPT_HEAD+'Messages:\n1 | Dean\'s office, email | 9 Nov | Approved: a 4-hour hackathon for 150 students…\n2 | Margalla Event Halls, email | 3 Nov | Room D seats 80…\n… (8 messages, raw text exactly as in the file)',output:'{"msgs":[{"i":1,"from":"Dean\'s office","role":"authority","date":"2026-11-09","facts":[{"k":"students","v":150,"q":"150 students in teams of 3"},{"k":"team_size","v":3,…},{"k":"budget","v":650000,"q":"budget is Rs 650,000"}…]},{"i":2,"from":"Margalla Event Halls","role":"venue",…}, … ]}'},
+      code:[code('schema','valid · 8 msgs · 27 facts'),code('grounding','27/27 numbers found in source text'),code('resolver','msg 3 standard=1,000 SUPERSEDED (caterer, newer msg 4 dated 12 Nov)'),code('resolver','msg 7 DJ 50,000 REQUEST (student cannot commit cost; optional)'),code('resolver','msg 8 late judge 10 min NO IMPACT (judging starts +3:00)'),code('derive','teams 50 · judges 17/20 · rounds 3 · headcount 177'),code('venue','Hall A (cheapest with seats ≥ 177) · Room D too small'),code('optimiser',`standard lunch kept · DJ included (headroom ${N(P.headroom)})`),code('schedule','6 blocks · 240 min · start 10:00 (assumption)'),code('checks',`6/6 PASS · total ${N(P.total)} / 650,000`,'good')],cum};
+    }
+    const a=added[r-2],m=8+r-1,s=SC[a.key];const tok=s?s.tok:[522,41];
+    let lines;
+    if(a.key==='print')lines=[code('grounding','1/1 numbers found'),code('resolver',`msg ${m} printing 10,000 → 15,000 APPLIED (finance owns committed costs; newer)`),code('supersede','msg 6 fact printing=10,000'),code('recompute','budget (venue, schedule, food, judging unchanged)'),code('checks',`6/6 PASS · total ${N(P.total)} / 650,000`,'good')];
+    else if(a.key==='boxes')lines=[code('grounding','1/1 numbers found'),code('resolver',`msg ${m} claim boxes=100 REJECTED · rule 2 derived claim: boxes = headcount 177 (150 + 17 + 10)`,'bad'),code('recompute','none · plan untouched'),code('checks',`6/6 PASS · total ${N(P.total)} / 650,000`,'good')];
+    else if(a.key==='withdraw')lines=[code('grounding','1/1 numbers found'),code('resolver',`msg ${m} judges_available 20 → 16 APPLIED (judging coordinator owns key)`),code('recompute','judging → schedule, food, venue, budget'),code('solver','judges needed 17 > 16 available · no valid plan','bad'),code('keep',`INFEASIBLE: needs 1 more judge · last valid plan from run ${r-1} kept`,'bad'),code('checks','5/6 · enough judges FAIL','bad')];
+    else lines=[code('resolver',`msg ${m} no facts · NO IMPACT`),code('recompute','none · plan untouched'),code('checks',P.infeasible?'5/6 · enough judges FAIL':`6/6 PASS · total ${N(P.total)} / 650,000`,P.infeasible?'bad':'good')];
+    const out=s?s.out:`{"msgs":[{"i":${m},"from":"Unknown","role":"unknown","date":null,"facts":[],"other":[]}]}`;
+    return{n:r,head:`=== RUN ${r} · update · 1 new message · 18 Nov ${TIMES[Math.min(r-1,TIMES.length-1)]} ===`,call:{num:r,p:tok[0],c:tok[1],input:PROMPT_HEAD+'Reuse these existing names where they match: Room D, Hall A, Hall B, Hall C, standard, basic, prizes, internet, printing, DJ\nMessages:\n'+m+' | '+a.text,output:out},code:lines,cum};
+  }
+  tokensUpTo(r,added){let t=1896;for(let i=2;i<=r;i++){const a=added[i-2];const s=SC[a.key];t+=s?s.tok[0]+s.tok[1]:563;}return t;}
+  download(name,text){const b=new Blob([text],{type:'text/plain'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),500);}
+  renderVals(){
+    const s=this.state,showSrc=this.props.showSourceTags??true;
+    const added=s.added,maxRun=added.length+1,view=Math.min(s.view,maxRun);
+    const now=added.slice(0,view-1),keys=now.map(a=>a.key);
+    const P=plan(keys);
+    const printMsg=keys.includes('print')?9+keys.indexOf('print'):6;
+    // ledger
+    const msgs=BASE.map((m,i)=>({...m,i:i+1,reason:m.reason}));
+    msgs[6].reason=`Rule 8 · request from a non-owner. Optional DJ Rs 50,000; included because it fits after required costs (headroom Rs ${N(P.headroom)}).`;
+    now.forEach((a,j)=>{const i=9+j,sc=SC[a.key];msgs.push(sc?{...sc,i,reason:sc.reason()}:{from:'Unknown sender',ch:'pasted',date:'18 Nov',status:'noimpact',text:a.text,quote:a.text.split(/\s+/).slice(0,8).join(' '),reason:'Rule 9 · no facts in the vocabulary and nothing for the escape hatch. Plan untouched.',facts:[],i});});
+    if(keys.includes('print'))msgs[5].reason+=` Printing 10,000 superseded by msg ${printMsg}.`;
+    const ledgerAll=msgs.map(m=>{const st=ST[m.status];return{...m,label:st[0],fg:st[1],bg:st[2],border:m.status==='rejected'?'#F1C3BD':'#E3E1DA',facts:m.facts.map(t=>{const dead=m.dead||(m.i===6&&t.includes('printing')&&keys.includes('print'));return{t,deco:dead?'line-through':'none',fg:dead?'#7C7F86':'#1A1C21'};})};});
+    const fdefs=[['all','All'],['applied','Applied'],['superseded','Superseded'],['rejected','Rejected'],['request','Request'],['noimpact','No impact']];
+    const msgFilters=fdefs.map(([id,label])=>{const on=s.msgFilter===id;return{label,count:id==='all'?ledgerAll.length:ledgerAll.filter(m=>m.status===id).length,bg:on?'#1A1C21':'#FFFFFF',fg:on?'#FFFFFF':'#1A1C21',border:on?'#1A1C21':'#E3E1DA',select:()=>this.setState({msgFilter:id})};});
+    const ledger=s.msgFilter==='all'?ledgerAll:ledgerAll.filter(m=>m.status===s.msgFilter);
+    // trace
+    const blocks=[];for(let r=1;r<=view;r++)blocks.push(this.traceFor(r,added));
+    const traceBlocks=blocks.filter(b=>s.traceRun==='all'||b.n===s.traceRun).map(b=>{const open=!!s.open[b.n];const call={isCall:true,isCode:false,num:b.call.num,model:MODEL,area:'reading',p:N(b.call.p),c:N(b.call.c),t:N(b.call.p+b.call.c),input:b.call.input,output:b.call.output,open,caret:open?'▾':'▸',toggle:()=>this.setState(st=>({open:{...st.open,[b.n]:!st.open[b.n]}}))};let items=[call,...b.code];if(s.traceType==='calls')items=[call];if(s.traceType==='code')items=b.code;return{head:b.head,items,foot:`--- run tokens ${N(b.call.p+b.call.c)} · calls 1 · cumulative tokens ${N(b.cum)} · cumulative calls ${b.n} ---`};});
+    const mkF=(on)=>({bg:on?'#1A1C21':'#FFFFFF',fg:on?'#FFFFFF':'#1A1C21',border:on?'#1A1C21':'#E3E1DA'});
+    const traceRunFilters=[{label:'All runs',id:'all'},...blocks.map(b=>({label:'Run '+b.n,id:b.n}))].map(f=>({...f,...mkF(s.traceRun===f.id),select:()=>this.setState({traceRun:f.id})}));
+    const traceTypeFilters=[['all','Everything'],['calls','Model calls'],['code','Code events']].map(([id,label])=>({label,...mkF(s.traceType===id),select:()=>this.setState({traceType:id})}));
+    // changes
+    const changes=[];for(let r=2;r<=view;r++){const a=added[r-2],m=8+r-1,before=plan(added.slice(0,r-2).map(x=>x.key)),after=plan(added.slice(0,r-1).map(x=>x.key));const sc=SC[a.key];const tok=sc?sc.tok:[522,41];
+      let facts=[],areas=[],deltas=[],result='No impact',st='noimpact';
+      if(a.key==='print'){facts=[{k:'printing',from:'10,000',to:'15,000',fg:'#1E7A4C'}];areas=['budget'];deltas=[{label:'Committed: printing',from:'10,000',to:'15,000'},{label:'Total',from:N(before.total),to:N(after.total)},{label:'Remaining',from:N(before.remaining),to:N(after.remaining)}];result='Applied';st='applied';}
+      else if(a.key==='boxes'){facts=[{k:'boxes (claim)',from:'177',to:'100 · rejected',fg:'#B42318'}];deltas=[{label:'Food boxes',from:'177',to:'177'},{label:'Total',from:N(before.total),to:N(after.total)}];result='Rejected · plan unchanged';st='rejected';}
+      else if(a.key==='withdraw'){facts=[{k:'judges_available',from:'20',to:'16',fg:'#B42318'}];areas=AREAS.slice();deltas=[{label:'Judges available',from:'20',to:'16'},{label:'Judges needed',from:'17',to:'17'},{label:'Checks',from:'6/6',to:'5/6'}];result='Applied · infeasible';st='rejected';}
+      else{deltas=[{label:'Total',from:N(before.total),to:N(after.total)}];}
+      changes.push({n:r,title:`msg ${m} · `+(sc?sc.title:'Pasted message'),result,fg:ST[st][1],bg:ST[st][2],tok:N(tok[0]+tok[1])+' tokens',facts:facts.length?facts:[{k:'facts',from:'',to:'none extracted',fg:'#565A63'}],areas:AREAS.map(n=>{const on=areas.includes(n);return{name:n,bg:on?'#1A1C21':'#FFFFFF',fg:on?'#FFFFFF':'#7C7F86',border:on?'#1A1C21':'#E3E1DA'};}),deltas:deltas.map(d=>({...d,fg:d.from===d.to?'#565A63':'#1A1C21'}))});}
+    changes.reverse();
+    // plan pieces
+    const venues=[['Room D','80','40,000','Too small · 80 < 177','#B42318',400],['Hall A','200','120,000','Chosen · cheapest that fits','#1E7A4C',600],['Hall B','200','150,000','Fits · Rs 30,000 more · has generator','#565A63',400],['Hall C','300','220,000','Fits · Rs 100,000 more · has generator','#565A63',400]].map(v=>({name:v[0],seats:v[1],price:v[2],verdict:v[3],verdictFg:v[4],weight:v[5]}));
+    const blocksS=[['10:00–10:15','Opening and briefing',15,'planner default','#D9D6CC','#1A1C21'],['10:15–12:15','Build',120,'240 − rest','#ECE9E1','#1A1C21'],['12:15–12:30','Prayer break',15,'msg 1','#CFCBBF','#1A1C21'],['12:30–13:00','Lunch',30,'planner default','#DEDAD0','#1A1C21'],['13:00–13:45','Judging · 3 rounds × 15 min',45,'derived','#1A1C21','#FFFFFF'],['13:45–14:00','Closing, prizes, DJ',15,'planner default','#B9B5A9','#1A1C21']].map(b=>({time:b[0],name:b[1],min:b[2],src:b[3],bg:b[4],fg:b[5]}));
+    const judgeCols=Array.from({length:17},(_,j)=>'J'+(j+1));
+    const rounds=['13:00','13:15','13:30'].map((time,r)=>({time,cells:judgeCols.map((_,j)=>{const t=r*17+j+1;return t<=50?{t:'T'+String(t).padStart(2,'0'),bg:'#F6F5F1',fg:'#1A1C21'}:{t:'—',bg:'#FFFFFF',fg:'#7C7F86'};})}));
+    const rows=[['Committed: prizes','Finance','100,000','msg 6'],['Committed: backup internet','Finance','20,000','msg 6'],['Committed: printing','Finance',N(P.printing),'msg '+printMsg],['Venue: Hall A','fixed','120,000','msg 2'],["Judges' honorarium",'17 × 5,000','85,000','msg 5'],['Food: standard box','177 × 1,200','212,400','msg 4'],['Required subtotal','',N(P.required),'',1],['DJ (optional request)','fixed','50,000','msg 7'],['Total','',N(P.total),'',1],['Remaining of 650,000','',N(P.remaining),'',2]];
+    const budgetRows=rows.map(r=>({label:r[0],basis:r[1],amount:r[2],src:showSrc?r[3]:'',weight:r[4]===1?700:400,line:r[4]===1?'#C9C6BD':'#EDEBE5',bg:'transparent',fg:r[4]===2?'#1E7A4C':'#1A1C21'}));
+    const bar=[['Committed',P.committed,'#565A63'],['Venue',120000,'#1A1C21'],['Judges',85000,'#7C7F86'],['Food',212400,'#B9B5A9'],['DJ (optional)',50000,'#9DB4E8'],['Headroom',P.remaining,'#E2F1E8']].map(b=>({label:b[0]+' '+N(b[1]),v:b[1],bg:b[2]}));
+    // header
+    const checks=[['Correct figures',1],['Within budget',1],['Venue fits',1],['Schedule valid',1],['Enough judges',!P.infeasible],['All areas covered',1]].map(([name,ok])=>({name,mark:ok?'✓':'✕',bg:ok?'#E2F1E8':'#FBE6E3',fg:ok?'#1E7A4C':'#B42318'}));
+    const pass=checks.filter(c=>c.mark==='✓').length;
+    const kpis=[{label:'Headcount',value:'177',sub:'150 + 17 judges + 10 staff'},{label:'Teams',value:'50',sub:'ceil(150 ÷ 3)'},{label:'Judges',value:`17 / ${P.avail}`,sub:P.infeasible?'1 short':`${P.avail-17} on standby`,fg:P.infeasible?'#B42318':'#1A1C21'},{label:'Total',value:'Rs '+N(P.total),sub:`of 650,000 · ${N(P.remaining)} left`}].map(k=>({fg:'#1A1C21',...k}));
+    const tabs=[['plan','Plan',5],['messages','Messages',ledgerAll.length],['trace','Trace',view+' calls'],['changes','Changes',view-1],['terminal','Terminal','cli']].map(([id,label,count])=>{const on=s.tab===id;return{label,count,fg:on?'#1A1C21':'#565A63',line:on?'#1A1C21':'transparent',select:()=>this.setState({tab:id})};});
+    const runs=Array.from({length:maxRun},(_,i)=>{const n=i+1,on=n===view;let label='full · 8 messages',dot='#1E7A4C';if(n>1){const a=added[n-2],sc=SC[a.key];label=sc?sc.title:'pasted message';const st=sc?(a.key==='boxes'?'rejected':a.key==='withdraw'?'infeasible':'applied'):'noimpact';dot=st==='applied'?'#1E7A4C':st==='noimpact'?'#9A9DA3':'#B42318';}return{n,label,dot,bg:on?'#F6F5F1':'transparent',border:on?'#E3E1DA':'transparent',select:()=>this.setState({view:n})};});
+    const addedKeys=added.map(a=>a.key);
+    const quick=PRESETS.map(k=>{const used=addedKeys.includes(k);return{label:SC[k].chip,fg:used?'#9A9DA3':'#1A1C21',onClick:()=>!used&&this.setState({draft:SC[k].text})};});
+    const can=!!s.draft.trim()&&!s.running;
+    // terminal
+    const term=[];blocks.forEach(b=>{term.push({t:b.head,c:'#F6F5F1',w:600});term.push({t:`[#${b.call.num}] model=${MODEL}  area=reading`,c:'#F0B54A',w:600});term.push({t:'  INPUT : <full prompt as sent · '+N(b.call.p)+' tokens>',c:'#A9ACB3',w:400});term.push({t:'  OUTPUT: '+b.call.output.slice(0,96)+'…',c:'#A9ACB3',w:400});term.push({t:`  TOKENS: prompt ${N(b.call.p)} · completion ${N(b.call.c)} · total ${N(b.call.p+b.call.c)}   (reported by API)`,c:'#F0B54A',w:400});b.code.forEach(c=>term.push({t:`[code] ${c.tag.padEnd(10)} ${c.text}`,c:c.fg==='#B42318'?'#F0857A':c.fg==='#1E7A4C'?'#7FD1A2':'#C9CBD0',w:400}));term.push({t:`--- run tokens ${N(b.call.p+b.call.c)} · calls 1 · cumulative tokens ${N(b.cum)} · cumulative calls ${b.n} ---`,c:'#A9ACB3',w:400});term.push({t:' ',c:'#000',w:400});});
+    term.push({t:'PLAN',c:'#F6F5F1',w:600});[['Venue','Hall A · 200 seats','120,000'],['Food','standard × 177','212,400'],['Judges','17 × 5,000','85,000'],['Committed','prizes, internet, printing',N(P.committed)],['DJ','optional, included','50,000'],['TOTAL','of 650,000',N(P.total)]].forEach(r=>term.push({t:`  ${r[0].padEnd(11)}${r[1].padEnd(28)}${r[2].padStart(9)}`,c:'#C9CBD0',w:r[0]==='TOTAL'?600:400}));
+    term.push({t:' ',c:'#000',w:400});term.push({t:'LEDGER · rejected / superseded',c:'#F6F5F1',w:600});ledgerAll.filter(m=>m.status==='rejected'||m.status==='superseded').forEach(m=>term.push({t:`  msg ${String(m.i).padEnd(3)}${m.label.toUpperCase().padEnd(12)}${m.reason}`,c:m.status==='rejected'?'#F0857A':'#A9ACB3',w:400}));
+    term.push({t:' ',c:'#000',w:400});term.push({t:P.infeasible?'CHECKS 5/6 · enough judges FAIL · INFEASIBLE: needs 1 more judge':'CHECKS 6/6 PASS',c:P.infeasible?'#F0857A':'#7FD1A2',w:600});
+    const termText=term.map(l=>l.t).join('\n');
+    const planMd=`# Hackathon plan (run ${view})\n\nHeadcount 177 · Teams 50 · Judges 17/${P.avail}\nVenue: Hall A (Rs 120,000)\nFood: standard × 177 = Rs 212,400\nJudging: 17 judges, 3 rounds × 15 min, 13:00–13:45\nBudget: Rs ${N(P.total)} of 650,000 (remaining ${N(P.remaining)})\nChecks: ${pass}/6\n`;
+    const nextCall=maxRun+1;
+    return{
+      fileMeta:`${8+added.length} messages · ${maxRun} run${maxRun>1?'s':''}`,
+      runs,draft:s.draft,onDraft:e=>this.setState({draft:e.target.value}),quick,
+      addLabel:s.running?'Re-planning…':'Add & re-plan',addBg:can?'#1A1C21':'#ECEBE6',addFg:can?'#FFFFFF':'#9A9DA3',
+      addMessage:()=>{if(!can)return;const text=s.draft.trim();const key=PRESETS.find(k=>SC[k].text===text&&!addedKeys.includes(k))||'custom';this.setState({running:true,tab:s.tab});this.t=setTimeout(()=>this.setState(st=>{const a=[...st.added,{key,text}];return{added:a,view:a.length+1,draft:'',running:false};}),1200);},
+      running:s.running,runningText:`Running update · model call #${nextCall} · area=reading · new text only`,
+      dlPlan:()=>this.download('plan.md',planMd),dlTrace:()=>this.download('trace.txt',termText),
+      kpis,checks,checksLabel:`${pass}/6 checks`,checksFg:pass===6?'#1E7A4C':'#B42318',
+      runTitle:`Run ${view} of ${maxRun}`,sessionTok:`${N(this.tokensUpTo(view,added))} tokens · ${view} calls`,
+      infeasible:P.infeasible,infeasibleText:`16 judges available, 17 needed (50 teams ÷ max 3 per judge). The coordinator's message is legitimate, so it stays applied. Showing the last valid plan. Fix: confirm 1 more judge, or raise max teams per judge to 4.`,
+      olderView:view<maxRun,olderText:`Viewing run ${view}. Later runs exist.`,goLatest:()=>this.setState({view:maxRun}),
+      tabs,isPlan:s.tab==='plan',isMessages:s.tab==='messages',isTrace:s.tab==='trace',isChanges:s.tab==='changes',isTerminal:s.tab==='terminal',
+      showSrc,venues,blocks:blocksS,judgeCols,rounds,standby:P.infeasible?'16 available · 1 short':`${P.avail-17} on standby (not paid or fed)`,
+      budgetHead:`Rs ${N(P.total)} spent · ${N(P.remaining)} left`,bar,budgetRows,
+      msgFilters,ledger,traceBlocks,traceRunFilters,traceTypeFilters,
+      changes,noChanges:view===1,termLines:term
+    };
+  }
+}
+</script>
+</body>
+</html>

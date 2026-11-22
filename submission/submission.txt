@@ -1,0 +1,38 @@
+EVENT PLAN · 136 people · budget Rs 400,000
+
+1. VENUE
+   Hall 2 — 180 seats — Rs 110,000 (needs 136 seats)
+   not chosen: Seminar Room (100 seats < 136 people)
+   not chosen: Hall 1 (lacks accessible (not mentioned for this venue))
+   not chosen: Hall 3 (not available)
+
+2. SCHEDULE (start time assumed)
+   10:00-10:15  Opening / welcome (15 min)
+   10:15-11:35  Build (hacking) (80 min)
+   11:35-11:55  prayer break (20 min)
+   11:55-12:25  Meal break (30 min)
+   12:25-13:45  Judging (4 rounds × 20 min, 8 judges in parallel) (80 min)
+   13:45-14:00  Closing (15 min)
+
+3. FOOD
+   biryani box — quantity 136 (everyone attending) — Rs 850 each = Rs 115,600
+
+4. JUDGING
+   8 judges (of 15 available) for 30 teams — 4 rounds × 20 min — cost Rs 32,000
+
+5. BUDGET
+   Committed: trophies              Rs     60,000
+   Committed: banners               Rs     15,000
+   Venue: Hall 2                    Rs    110,000
+   Judges' honorarium               Rs     32,000
+   Food: biryani box                Rs    115,600
+   service charge                   Rs     11,560
+   photo booth (optional)           Rs     30,000
+   TOTAL                            Rs    374,160  of Rs 400,000 — FITS (Rs 25,840 left)
+
+CHECKS: 6/6 passed
+
+TRACE (one line per AI call)
+#1 | model openai/gpt-oss-20b | reading messages | prompt 1853 + completion 1250 = 3103 tokens
+#2 | model groq/openai/gpt-oss-20b | venue constraint | FAILED (HTTPError: 429 Client Error: Too Many Requests for url: http)
+TOTAL: 2 AI call(s) · 3,103 tokens

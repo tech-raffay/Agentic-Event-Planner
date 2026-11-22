@@ -1,0 +1,29 @@
+#1 | From: Registrar's office, email | Date: 6 Nov
+"Approved: a 4-hour hackathon for 120 students in teams of 4. The budget is Rs 400,000, all in. Eight staff will be on duty. Please keep a 20-minute prayer break in the schedule."
+
+#2 | From: Faisal Convention Centre, email | Date: 2 Nov
+"Seminar Room seats 100 at Rs 35,000. Hall 1 seats 160 at Rs 90,000. Hall 2 seats 180 at Rs 110,000. Hall 3 seats 250 at Rs 160,000. Only Halls 2 and 3 are on the ground floor with ramp access."
+
+#3 | From: Student disability office, email | Date: 10 Nov
+"Two registered participants use wheelchairs. The venue must have step-free access throughout."
+
+#4 | From: Caterer, WhatsApp | Date: 25 Oct
+"Biryani box Rs 700 per head."
+
+#5 | From: Caterer, WhatsApp | Date: 11 Nov
+"Assalam o alaikum! Rates update: biryani box ab Rs 850 per head hai, sandwich box Rs 600. 10% service charge alag se lagega on the total."
+
+#6 | From: Judging lead, email | Date: 9 Nov
+"15 judges have confirmed. The honorarium is Rs 4,000 each. A judge needs 20 minutes per team and can cover at most four teams."
+
+#7 | From: Finance, email | Date: 8 Nov
+"Already paid from the event budget: trophies Rs 60,000 and banners Rs 15,000."
+
+#8 | From: Student society, WhatsApp | Date: 12 Nov
+"Can we have a photo booth near the entrance? Quote is Rs 30,000."
+
+#9 | From: Faisal Convention Centre, WhatsApp | Date: 13 Nov
+"Sorry sir, Hall 3 is under maintenance on your event date and cannot be booked."
+
+#10 | From: Library, notice | Date: 14 Nov
+"The library will close at 3 pm on Friday for stock-taking."

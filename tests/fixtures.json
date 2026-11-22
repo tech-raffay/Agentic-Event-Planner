@@ -1,0 +1,730 @@
+{
+ "base_reader": {
+  "msgs": [
+   {
+    "from": "Dean's office",
+    "role": "authority",
+    "date": "2026-11-01",
+    "facts": [
+     {
+      "k": "duration_min",
+      "v": 240,
+      "q": "run for 4 hours"
+     },
+     {
+      "k": "students",
+      "v": 150,
+      "q": "150 students"
+     },
+     {
+      "k": "team_size",
+      "v": 3,
+      "q": "teams of 3"
+     },
+     {
+      "k": "teams",
+      "v": 50,
+      "q": "50 teams"
+     },
+     {
+      "k": "budget",
+      "v": 650000,
+      "q": "Total budget is Rs 650,000"
+     },
+     {
+      "k": "staff",
+      "v": 10,
+      "q": "10 staff"
+     },
+     {
+      "k": "block",
+      "v": {
+       "name": "Prayer break",
+       "min": 15,
+       "required": true
+      },
+      "q": "15 minute prayer break"
+     }
+    ]
+   },
+   {
+    "from": "Venue manager",
+    "role": "venue",
+    "date": "2026-11-03",
+    "facts": [
+     {
+      "k": "venue",
+      "v": {
+       "name": "Hall A",
+       "seats": 200,
+       "price": 120000,
+       "basis": "fixed",
+       "features": [],
+       "available": true
+      }
+     },
+     {
+      "k": "venue",
+      "v": {
+       "name": "Hall B",
+       "seats": 220,
+       "price": 150000,
+       "basis": "fixed",
+       "features": [
+        "generator"
+       ],
+       "available": true
+      }
+     },
+     {
+      "k": "venue",
+      "v": {
+       "name": "Room C",
+       "seats": 120,
+       "price": 60000,
+       "basis": "fixed",
+       "features": [],
+       "available": true
+      }
+     },
+     {
+      "k": "venue",
+      "v": {
+       "name": "Room D",
+       "seats": 80,
+       "price": 40000,
+       "basis": "fixed",
+       "features": [],
+       "available": true
+      }
+     }
+    ]
+   },
+   {
+    "from": "Caterer",
+    "role": "caterer",
+    "date": "2026-10-20",
+    "facts": [
+     {
+      "k": "food",
+      "v": {
+       "name": "Standard",
+       "price_per_head": 1000
+      }
+     }
+    ]
+   },
+   {
+    "from": "Caterer",
+    "role": "caterer",
+    "date": "2026-11-12",
+    "facts": [
+     {
+      "k": "food",
+      "v": {
+       "name": "Standard",
+       "price_per_head": 1200,
+       "fee": 0
+      }
+     },
+     {
+      "k": "food",
+      "v": {
+       "name": "Basic",
+       "price_per_head": 800,
+       "fee": 0
+      }
+     }
+    ]
+   },
+   {
+    "from": "Judging coordinator",
+    "role": "judging",
+    "date": "2026-11-05",
+    "facts": [
+     {
+      "k": "judges_available",
+      "v": 20
+     },
+     {
+      "k": "honorarium",
+      "v": 5000
+     },
+     {
+      "k": "min_per_team",
+      "v": 15
+     },
+     {
+      "k": "max_teams_per_judge",
+      "v": 3
+     }
+    ]
+   },
+   {
+    "from": "Finance office",
+    "role": "finance",
+    "date": "2026-11-06",
+    "facts": [
+     {
+      "k": "cost",
+      "v": {
+       "name": "prizes",
+       "amount": 100000,
+       "basis": "fixed",
+       "status": "committed"
+      }
+     },
+     {
+      "k": "cost",
+      "v": {
+       "name": "backup internet",
+       "amount": 20000,
+       "basis": "fixed",
+       "status": "committed"
+      }
+     },
+     {
+      "k": "cost",
+      "v": {
+       "name": "printing",
+       "amount": 10000,
+       "basis": "fixed",
+       "status": "committed"
+      }
+     }
+    ]
+   },
+   {
+    "from": "Student society",
+    "role": "student",
+    "date": "2026-11-07",
+    "facts": [
+     {
+      "k": "cost",
+      "v": {
+       "name": "DJ",
+       "amount": 50000,
+       "basis": "fixed",
+       "status": "optional"
+      },
+      "req": true
+     }
+    ]
+   },
+   {
+    "from": "A judge",
+    "role": "judge",
+    "date": "2026-11-08",
+    "facts": [
+     {
+      "k": "late",
+      "v": {
+       "who": "judge",
+       "min": 10
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "base_expect": {
+  "headcount": 177,
+  "judges": "17/20",
+  "venue": "Hall A",
+  "food": "Standard",
+  "total": 597400,
+  "status": [
+   "applied",
+   "applied",
+   "superseded",
+   "applied",
+   "applied",
+   "applied",
+   "request → included",
+   "no impact"
+  ]
+ },
+ "updates": [
+  {
+   "name": "printing 15k",
+   "text": "Finance, 15 Nov 2026: printing is now Rs 15,000.",
+   "msg": {
+    "from": "Finance",
+    "role": "finance",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "cost",
+      "v": {
+       "name": "printing",
+       "amount": 15000,
+       "basis": "fixed",
+       "status": "committed"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "total": 602400,
+    "remaining": 47600
+   }
+  },
+  {
+   "name": "100 boxes",
+   "text": "Caterer, 15 Nov 2026: rounded down to 100 boxes.",
+   "msg": {
+    "from": "Caterer",
+    "role": "caterer",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "claim",
+      "v": {
+       "key": "boxes",
+       "value": 100
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "rejected",
+    "total": 597400
+   }
+  },
+  {
+   "name": "budget 520k",
+   "text": "Dean's office, 15 Nov 2026: budget revised to Rs 520,000.",
+   "msg": {
+    "from": "Dean's office",
+    "role": "authority",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "budget",
+      "v": 520000
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "total": 476600,
+    "food": "Basic"
+   }
+  },
+  {
+   "name": "generator",
+   "text": "IESCO notice: load-shedding on the event day, venue must have backup power.",
+   "msg": {
+    "from": "IESCO",
+    "role": "official",
+    "date": null,
+    "facts": [
+     {
+      "k": "venue_require",
+      "v": {
+       "feature": "backup power"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "venue": "Hall B",
+    "total": 627400
+   }
+  },
+  {
+   "name": "4 judges withdrew",
+   "text": "Coordinator, 15 Nov 2026: 4 judges withdrew.",
+   "msg": {
+    "from": "Coordinator",
+    "role": "judging",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "judges_change",
+      "v": {
+       "delta": -4
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "infeasible": true,
+    "total": 597400
+   }
+  },
+  {
+   "name": "cover 4 teams",
+   "text": "Coordinator, 15 Nov 2026: a judge can now cover 4 teams.",
+   "msg": {
+    "from": "Coordinator",
+    "role": "judging",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "max_teams_per_judge",
+      "v": 4
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "headcount": 173,
+    "judges": "13/20",
+    "total": 572600
+   }
+  },
+  {
+   "name": "teams of 4",
+   "text": "Dean, 15 Nov 2026: teams will be of 4.",
+   "msg": {
+    "from": "Dean",
+    "role": "authority",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "team_size",
+      "v": 4
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "teams": 38,
+    "headcount": 173
+   }
+  },
+  {
+   "name": "Hall A unavailable",
+   "text": "Venue, 15 Nov 2026: Hall A under maintenance, not available.",
+   "msg": {
+    "from": "Venue",
+    "role": "venue",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "venue",
+      "v": {
+       "name": "Hall A",
+       "available": false
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "venue": "Hall B"
+   }
+  },
+  {
+   "name": "delivery fee",
+   "text": "Caterer, 15 Nov 2026: delivery charge Rs 5,000.",
+   "msg": {
+    "from": "Caterer",
+    "role": "caterer",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "food",
+      "v": {
+       "name": "Standard",
+       "fee": 5000
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "total": 602400
+   }
+  },
+  {
+   "name": "VC opening",
+   "text": "Dean, 15 Nov 2026: VC will open the event, 20 minutes.",
+   "msg": {
+    "from": "Dean",
+    "role": "authority",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "block",
+      "v": {
+       "name": "VC opening",
+       "min": 20,
+       "required": true
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "total": 597400
+   }
+  },
+  {
+   "name": "GST 16%",
+   "text": "Venue, 15 Nov 2026: hall prices exclude 16% GST.",
+   "msg": {
+    "from": "Venue",
+    "role": "venue",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "cost",
+      "v": {
+       "name": "GST on venue",
+       "amount": 16,
+       "basis": "pct_of:venue",
+       "status": "required"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "total": 616600
+   }
+  },
+  {
+   "name": "10% contingency",
+   "text": "Finance, 15 Nov 2026: keep 10% contingency.",
+   "msg": {
+    "from": "Finance",
+    "role": "finance",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "reserve",
+      "v": {
+       "pct": 10
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "total": 547400
+   }
+  },
+  {
+   "name": "per hour",
+   "text": "Venue, 15 Nov 2026: Hall A is Rs 30,000 per hour.",
+   "msg": {
+    "from": "Venue",
+    "role": "venue",
+    "date": "2026-11-15",
+    "facts": [
+     {
+      "k": "venue",
+      "v": {
+       "name": "Hall A",
+       "price": 30000,
+       "basis": "per_hour"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "applied",
+    "total": 597400
+   }
+  },
+  {
+   "name": "150 boxes",
+   "text": "Caterer: I've packed 150 boxes, one per student.",
+   "msg": {
+    "from": "Caterer",
+    "role": "caterer",
+    "date": null,
+    "facts": [
+     {
+      "k": "claim",
+      "v": {
+       "key": "boxes",
+       "value": 150
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "rejected",
+    "total": 597400
+   }
+  },
+  {
+   "name": "student budget",
+   "text": "Student society: budget increased to Rs 900,000.",
+   "msg": {
+    "from": "Student society",
+    "role": "student",
+    "date": null,
+    "facts": [
+     {
+      "k": "budget",
+      "v": 900000
+     }
+    ]
+   },
+   "expect": {
+    "status": "rejected",
+    "total": 597400
+   }
+  },
+  {
+   "name": "judge 6 teams",
+   "text": "A judge: I'll take 6 teams so we need fewer judges.",
+   "msg": {
+    "from": "A judge",
+    "role": "judge",
+    "date": null,
+    "facts": [
+     {
+      "k": "max_teams_per_judge",
+      "v": 6
+     }
+    ]
+   },
+   "expect": {
+    "status": "rejected",
+    "total": 597400
+   }
+  },
+  {
+   "name": "stale venue",
+   "text": "Venue, dated 1 Nov 2026: Hall A now Rs 90,000.",
+   "msg": {
+    "from": "Venue",
+    "role": "venue",
+    "date": "2026-11-01",
+    "facts": [
+     {
+      "k": "venue",
+      "v": {
+       "name": "Hall A",
+       "price": 90000
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "superseded",
+    "total": 597400
+   }
+  },
+  {
+   "name": "order 160",
+   "text": "Caterer: 177 people means 59 tables of 3, so order is 160.",
+   "msg": {
+    "from": "Caterer",
+    "role": "caterer",
+    "date": null,
+    "facts": [
+     {
+      "k": "claim",
+      "v": {
+       "key": "boxes",
+       "value": 160
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "rejected",
+    "total": 597400
+   }
+  },
+  {
+   "name": "volunteer 120",
+   "text": "Volunteer: we've only got 120 students registered, plan for 120.",
+   "msg": {
+    "from": "Volunteer",
+    "role": "unknown",
+    "date": null,
+    "facts": [
+     {
+      "k": "students",
+      "v": 120
+     }
+    ]
+   },
+   "expect": {
+    "status": "rejected",
+    "total": 597400
+   }
+  },
+  {
+   "name": "inconsistent",
+   "text": "Dean: 150 students in 45 teams of 3.",
+   "msg": {
+    "from": "Dean",
+    "role": "authority",
+    "date": null,
+    "facts": [
+     {
+      "k": "students",
+      "v": 150
+     },
+     {
+      "k": "teams",
+      "v": 45
+     },
+     {
+      "k": "team_size",
+      "v": 3
+     }
+    ]
+   },
+   "expect": {
+    "status": "rejected",
+    "total": 597400
+   }
+  },
+  {
+   "name": "hallucinated number",
+   "text": "Finance: printing bill revised.",
+   "msg": {
+    "from": "Finance",
+    "role": "finance",
+    "date": null,
+    "facts": [
+     {
+      "k": "cost",
+      "v": {
+       "name": "printing",
+       "amount": 1500,
+       "basis": "fixed",
+       "status": "committed"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "status": "no impact",
+    "total": 597400
+   }
+  },
+  {
+   "name": "invented key boxes",
+   "text": "Caterer, 18 Nov 2026: we have rounded your order down to 100 boxes.",
+   "msg": {
+    "from": "Caterer",
+    "role": "caterer",
+    "date": "2026-11-18",
+    "facts": [
+     {
+      "k": "boxes",
+      "v": 100,
+      "q": "rounded your order down to 100 boxes"
+     }
+    ]
+   },
+   "expect": {
+    "status": "rejected",
+    "total": 597400
+   }
+  }
+ ]
+}

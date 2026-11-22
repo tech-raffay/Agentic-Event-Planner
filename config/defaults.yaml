@@ -1,0 +1,12 @@
+# Planner assumptions (not message facts). Shown as "planner default" in the plan.
+start_time: "10:00"      # used only when no message gives a start time
+judges_per_team: 1
+default_duration_min: 240   # used only when no message gives the event length
+min_per_team: 10         # used only when no message gives judging minutes per team
+min_build: 60            # build block must be at least this long, else defaults shrink
+max_calls_per_run: 5     # hard cap on model calls per run (update limit is 5)
+timeout_s: 40            # per call; then fall back to the next provider
+blocks:
+  opening: {name: "Opening / welcome", min: 15, shrink_to: 10}
+  lunch: {name: "Meal break", min: 30, shrink_to: 20}
+  closing: {name: "Closing", min: 15}

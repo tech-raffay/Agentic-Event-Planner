@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#F4F4F5;color:#18181B;font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased;overflow:hidden}a{color:#2563EB;text-decoration:none}a:hover{color:#1D4ED8}*{box-sizing:border-box}textarea,button,input{font-family:inherit}</style>
+</helmet>
+<div style="height:100vh;min-width:1320px;display:grid;grid-template-rows:44px minmax(0,1fr);background:#F4F4F5;overflow-x:auto">
+
+<header style="display:flex;align-items:center;gap:10px;padding:0 10px 0 12px">
+  <div style="width:26px;height:26px;border-radius:50%;background:#27272A;position:relative;flex:none"><span style="position:absolute;left:8px;top:8px;width:10px;height:10px;border-radius:50%;background:#FFFFFF"></span></div>
+  <span style="color:#A1A1AA;font-size:16px;margin:0 2px">/</span>
+  <span style="display:flex;align-items:center;gap:7px;font-size:14px;color:#3F3F46"><span style="width:16px;height:16px;background:#52525B;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/hexagon.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/hexagon.svg) center/contain no-repeat"></span>Mind to Machine Hackathon</span>
+  <span style="color:#A1A1AA;font-size:16px;margin:0 2px">/</span>
+  <span style="display:flex;align-items:center;gap:7px;font-size:14px;color:#3F3F46"><span style="width:16px;height:16px;background:#52525B;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/file-text.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/file-text.svg) center/contain no-repeat"></span>{{ fileName }}<span style="color:#A1A1AA;font-size:12px">{{ fileMeta }}</span></span>
+  <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+    <span style="display:flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:6px;background:{{ checksBg }};color:{{ checksFg }};font-size:13px;font-weight:500"><span style="width:15px;height:15px;background:{{ checksFg }};-webkit-mask:url({{ checksIcon }}) center/contain no-repeat;mask:url({{ checksIcon }}) center/contain no-repeat"></span>{{ checksLabel }}</span>
+    <button onClick="{{ delPlan }}" title="Delete this plan" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:6px;background:#FEF2F2;color:#B91C1C;font-size:13px;font-weight:500" style-hover="background:#FEE2E2">Delete plan<span style="width:14px;height:14px;background:#B91C1C;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/trash-2.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/trash-2.svg) center/contain no-repeat"></span></button>
+    <button onClick="{{ dlPlan }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:6px;background:#E4E4E7;color:#27272A;font-size:13px;font-weight:500" style-hover="background:#D4D4D8">plan.md<span style="width:14px;height:14px;background:#27272A;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/download.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/download.svg) center/contain no-repeat"></span></button>
+    <button onClick="{{ dlTrace }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;height:30px;padding:0 11px;border-radius:6px;background:#DBEAFE;color:#1D4ED8;font-size:13px;font-weight:500" style-hover="background:#BFDBFE">trace.txt<span style="width:14px;height:14px;background:#1D4ED8;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/download.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/download.svg) center/contain no-repeat"></span></button>
+  </div>
+</header>
+
+<div style="display:grid;grid-template-columns:{{ gridCols }};gap:0;min-height:0;padding:0 8px 8px 0">
+
+  <nav style="display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:4px">
+    <sc-for list="{{ rail }}" as="r" hint-placeholder-count="4">
+      <button onClick="{{ r.select }}" title="{{ r.label }}" style="all:unset;cursor:pointer;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:{{ r.bg }}" style-hover="background:#E4E4E7"><span style="width:18px;height:18px;background:{{ r.fg }};-webkit-mask:url({{ r.icon }}) center/contain no-repeat;mask:url({{ r.icon }}) center/contain no-repeat"></span></button>
+    </sc-for>
+    <a href="Brand Guide.dc.html" title="Brand guide" style="margin-top:auto;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center"><span style="width:18px;height:18px;background:#52525B;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/circle-help.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/circle-help.svg) center/contain no-repeat"></span></a>
+  </nav>
+
+  <sc-if value="{{ drawer }}" hint-placeholder-val="{{ true }}">
+  <aside style="background:#FFFFFF;border:1px solid #E4E4E7;border-right:none;border-radius:10px 0 0 10px;display:flex;flex-direction:column;min-height:0">
+    <div style="padding:14px 12px 10px;display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:15px;font-weight:500">Runs</span>
+      <div style="display:flex;gap:6px">
+        <button onClick="{{ goAdd }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border-radius:6px;background:#DBEAFE;color:#1D4ED8;font-size:13px;font-weight:500"><span style="width:14px;height:14px;background:#1D4ED8;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/plus.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/plus.svg) center/contain no-repeat"></span>Add message</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;padding:0 8px">
+      <sc-for list="{{ runs }}" as="r" hint-placeholder-count="3">
+        <button onClick="{{ r.select }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:9px;height:30px;padding:0 8px;border-radius:6px;background:{{ r.bg }}" style-hover="background:#F4F4F5">
+          <span style="width:15px;height:15px;flex:none;background:{{ r.color }};-webkit-mask:url({{ r.icon }}) center/contain no-repeat;mask:url({{ r.icon }}) center/contain no-repeat"></span>
+          <span style="font-size:13px;color:#27272A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="margin-top:auto;border-top:1px solid #E4E4E7;padding:12px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;background:#F4F4F5;border-radius:6px;padding:2px;align-self:flex-start">
+        <sc-for list="{{ sideTabs }}" as="t" hint-placeholder-count="2">
+          <button onClick="{{ t.select }}" style="all:unset;cursor:pointer;padding:4px 10px;border-radius:5px;font-size:13px;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.shadow }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ sideRows }}" as="c" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:8px;height:28px;font-size:13px">
+            <span style="width:14px;height:14px;flex:none;background:{{ c.color }};-webkit-mask:url({{ c.icon }}) center/contain no-repeat;mask:url({{ c.icon }}) center/contain no-repeat"></span>
+            <span style="color:#3F3F46;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+            <span style="color:{{ c.vfg }};font-weight:500">{{ c.value }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-size:12px;line-height:17px;color:#71717A">Six checks run in code after every plan, before anything is printed.</span>
+    </div>
+  </aside>
+
+  <aside style="background:#FFFFFF;border:1px solid #E4E4E7;display:flex;flex-direction:column;min-height:0">
+    <div style="padding:14px 12px 10px;display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:15px;font-weight:500">Messages</span>
+      <div style="display:flex;align-items:center;gap:8px;height:32px;border:1px solid #D4D4D8;border-radius:7px;padding:0 10px">
+        <span style="width:15px;height:15px;background:#71717A;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/search.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/search.svg) center/contain no-repeat"></span>
+        <input value="{{ q }}" onChange="{{ onQ }}" placeholder="Search messages" style="all:unset;flex:1;font-size:13px;color:#18181B"></input>
+      </div>
+    </div>
+    <div style="flex:1;min-height:0;overflow:auto;padding:0 12px 16px;display:flex;flex-direction:column;gap:4px">
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+        <div style="flex-shrink:0;display:flex;flex-direction:column;gap:8px;padding:8px 0 10px">
+          <button onClick="{{ g.toggle }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;color:#3F3F46">
+            <span style="width:14px;height:14px;background:#71717A;-webkit-mask:url({{ g.chev }}) center/contain no-repeat;mask:url({{ g.chev }}) center/contain no-repeat"></span>{{ g.label }}<span style="color:#A1A1AA">{{ g.count }}</span>
+          </button>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+              <sc-for list="{{ g.items }}" as="m" hint-placeholder-count="2">
+                <button onClick="{{ m.select }}" title="{{ m.full }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:7px;height:32px;padding:0 8px;border:1px solid {{ m.border }};border-radius:6px;background:#FFFFFF;min-width:0;box-shadow:0 1px 0 rgba(0,0,0,0.03)" style-hover="background:#FAFAFA">
+                  <span style="width:18px;height:18px;flex:none;border-radius:4px;background:#18181B;display:flex;align-items:center;justify-content:center"><span style="width:11px;height:11px;background:#FFFFFF;-webkit-mask:url({{ m.icon }}) center/contain no-repeat;mask:url({{ m.icon }}) center/contain no-repeat"></span></span>
+                  <span style="font-size:13px;color:#27272A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </aside>
+
+  </sc-if>
+  <section data-screen-label="Pipeline canvas" style="position:relative;min-width:0;min-height:0;overflow:hidden;background-color:#F4F4F5;background-image:radial-gradient(#D4D4D8 1px, transparent 1px);background-size:16px 16px;border-top:1px solid #E4E4E7;border-bottom:1px solid #E4E4E7">
+    <sc-if value="{{ infeasible }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:14px;left:14px;z-index:3;display:flex;align-items:center;gap:7px;height:30px;padding:0 11px;border-radius:6px;background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;font-weight:500"><span style="width:14px;height:14px;background:#B91C1C;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/triangle-alert.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/triangle-alert.svg) center/contain no-repeat"></span>{{ infeasibleText }}</div>
+    </sc-if>
+    <div style="position:absolute;top:14px;right:14px;z-index:3;display:flex;align-items:center;gap:7px;height:30px;padding:0 11px;border-radius:6px;background:#FFFFFF;border:1px solid #E4E4E7;color:#52525B;font-size:13px">{{ runBadge }}</div>
+    <div style="position:absolute;inset:0;overflow:auto">
+      <div style="width:820px;height:700px;position:relative;transform-origin:0 0;transform:scale({{ zoom }});margin:40px 0 0 24px">
+        <svg width="820" height="700" style="position:absolute;left:0;top:0">
+          <sc-for list="{{ edges }}" as="e" hint-placeholder-count="5">
+            <path d="{{ e.d }}" style="fill:none;stroke:#A1A1AA;stroke-width:1.25"></path>
+          </sc-for>
+          <sc-for list="{{ ports }}" as="p" hint-placeholder-count="10">
+            <circle cx="{{ p.x }}" cy="{{ p.y }}" r="3.5" style="fill:#FFFFFF;stroke:#A1A1AA;stroke-width:1.25"></circle>
+          </sc-for>
+        </svg>
+
+        <div style="position:absolute;left:0;top:250px;width:72px;height:30px;border-radius:7px;background:#2F9E75;color:#FFFFFF;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center">Start</div>
+        <div style="position:absolute;left:720px;top:470px;width:64px;height:30px;border-radius:7px;background:#52525B;color:#FFFFFF;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px">End</div>
+
+        <sc-for list="{{ nodes }}" as="n" hint-placeholder-count="4">
+          <div style="position:absolute;left:{{ n.x }}px;top:{{ n.y }}px;width:{{ n.w }}px">
+            <sc-if value="{{ n.hasTag }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#7C3AED;margin:0 0 4px 2px"><span style="width:12px;height:12px;background:#7C3AED;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/sparkles.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/sparkles.svg) center/contain no-repeat"></span>Model call</span>
+            </sc-if>
+            <button onClick="{{ n.select }}" style="all:unset;cursor:pointer;display:flex;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;background:#FFFFFF;border:1px solid {{ n.border }};border-radius:9px;padding:9px;box-shadow:{{ n.shadow }}">
+              <div style="display:flex;align-items:center;gap:6px;padding:0 2px">
+                <span style="width:12px;height:12px;background:#A1A1AA;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/grip-vertical.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/grip-vertical.svg) center/contain no-repeat"></span>
+                <span style="font-size:13px;font-weight:600;color:#18181B">{{ n.title }}</span>
+                <span style="margin-left:auto;width:15px;height:15px;background:{{ n.statusColor }};-webkit-mask:url({{ n.statusIcon }}) center/contain no-repeat;mask:url({{ n.statusIcon }}) center/contain no-repeat"></span>
+              </div>
+              <sc-if value="{{ n.hasBox }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px solid #E4E4E7;border-radius:6px;padding:6px 8px;display:flex;flex-direction:column;gap:4px">
+                  <span style="align-self:flex-start;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;color:#52525B;background:#F4F4F5;border:1px solid #E4E4E7;border-radius:3px;padding:0 4px">{{ n.boxLabel }}</span>
+                  <span style="font-size:11px;line-height:15px;color:#3F3F46;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">{{ n.boxText }}</span>
+                </div>
+              </sc-if>
+              <sc-for list="{{ n.rows }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:7px;height:26px;padding:0 8px;border:1px solid #E4E4E7;border-radius:6px;background:#FAFAFA">
+                  <span style="width:13px;height:13px;flex:none;background:{{ r.color }};-webkit-mask:url({{ r.icon }}) center/contain no-repeat;mask:url({{ r.icon }}) center/contain no-repeat"></span>
+                  <span style="font-size:11.5px;color:#27272A">{{ r.k }}</span>
+                  <span style="margin-left:auto;font-size:11px;color:{{ r.vfg }};background:{{ r.vbg }};padding:1px 6px;border-radius:4px;white-space:nowrap">{{ r.v }}</span>
+                </div>
+              </sc-for>
+            </button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position:absolute;right:14px;bottom:14px;z-index:3;display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E4E4E7;border-radius:8px;overflow:hidden">
+      <button onClick="{{ zoomIn }}" title="Zoom in" style="all:unset;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #E4E4E7"><span style="width:15px;height:15px;background:#3F3F46;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/plus.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/plus.svg) center/contain no-repeat"></span></button>
+      <button onClick="{{ zoomOut }}" title="Zoom out" style="all:unset;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #E4E4E7"><span style="width:15px;height:15px;background:#3F3F46;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/minus.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/minus.svg) center/contain no-repeat"></span></button>
+      <button onClick="{{ zoomFit }}" title="Reset zoom" style="all:unset;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center"><span style="width:15px;height:15px;background:#3F3F46;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/scan.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/scan.svg) center/contain no-repeat"></span></button>
+    </div>
+  </section>
+
+  <aside data-screen-label="Inspector" style="background:#FFFFFF;border:1px solid #E4E4E7;border-radius:0 10px 10px 0;display:flex;flex-direction:column;min-height:0">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #E4E4E7">
+      <span style="width:16px;height:16px;background:#52525B;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/panel-left.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/panel-left.svg) center/contain no-repeat"></span>
+      <div style="display:flex;background:#F4F4F5;border-radius:7px;padding:2px;margin:0 auto">
+        <sc-for list="{{ inspTabs }}" as="t" hint-placeholder-count="2">
+          <button onClick="{{ t.select }}" style="all:unset;cursor:pointer;padding:5px 14px;border-radius:6px;font-size:13px;font-weight:500;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.shadow }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <span style="width:16px"></span>
+    </div>
+
+    <sc-if value="{{ isInspect }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;min-height:0;overflow:auto;padding:14px 12px 18px;display:flex;flex-direction:column;gap:14px">
+        <div style="flex-shrink:0;display:flex;align-items:center;gap:8px">
+          <span style="width:16px;height:16px;background:#3F3F46;-webkit-mask:url({{ selIcon }}) center/contain no-repeat;mask:url({{ selIcon }}) center/contain no-repeat"></span>
+          <span style="font-size:15px;font-weight:600">{{ selTitle }}</span>
+          <span style="margin-left:auto;font-size:12px;font-weight:500;color:{{ selStatusFg }}">{{ selStatus }}</span>
+        </div>
+        <div style="flex-shrink:0;display:flex;flex-direction:column">
+          <sc-for list="{{ fields }}" as="f" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:32px">
+              <span style="font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">{{ f.k }}</span>
+              <span style="font-size:13px;color:{{ f.fg }};text-align:right">{{ f.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <sc-for list="{{ boxes }}" as="b" hint-placeholder-count="2">
+          <div style="flex-shrink:0;display:flex;flex-direction:column;gap:6px">
+            <span style="align-self:flex-start;font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">{{ b.label }}</span>
+            <div style="border:1px solid #D4D4D8;border-radius:6px;padding:10px;font-size:13px;line-height:19px;color:#27272A;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow:auto;font-family:{{ b.font }}">{{ b.text }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAdd }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;min-height:0;overflow:auto;padding:14px 12px 18px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;min-height:32px">
+          <span style="font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">Append to</span>
+          <span style="font-size:13px">{{ fileName }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="align-self:flex-start;font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">Message, exactly as released</span>
+          <textarea value="{{ draft }}" onChange="{{ onDraft }}" rows="9" placeholder="Paste the new message here" style="border:1px solid #D4D4D8;border-radius:6px;padding:10px;font-size:13px;line-height:19px;color:#27272A;resize:vertical;outline:none"></textarea>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;color:#71717A">Practice messages</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ quick }}" as="q" hint-placeholder-count="3">
+              <button onClick="{{ q.onClick }}" style="all:unset;cursor:pointer;height:26px;padding:0 9px;border:1px solid #E4E4E7;border-radius:6px;font-size:12px;color:{{ q.fg }}" style-hover="background:#F4F4F5">{{ q.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;min-height:32px">
+          <span style="font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">Predicted model calls</span>
+          <span style="font-size:13px">1 · reading</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;min-height:32px">
+          <span style="font-size:13px;color:#3F3F46;border-bottom:1px dashed #D4D4D8;padding-bottom:1px">Command</span>
+          <span style="font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,monospace">python run.py {{ fileName }}</span>
+        </div>
+        <button onClick="{{ send }}" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;height:34px;border-radius:7px;background:{{ sendBg }};color:#FFFFFF;font-size:13px;font-weight:500"><span style="width:14px;height:14px;background:#FFFFFF;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/play.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/play.svg) center/contain no-repeat"></span>{{ sendLabel }}</button>
+      </div>
+    </sc-if>
+  </aside>
+</div>
+  <sc-if value="{{ toastShow }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ toastClose }}" style="position:fixed;right:24px;bottom:24px;z-index:50;max-width:460px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border-radius:10px;background:{{ toastBg }};color:#FFFFFF;box-shadow:0 10px 30px rgba(0,0,0,0.25);font-size:13px;line-height:18px">
+      <span style="font-size:18px;line-height:18px">{{ toastIcon }}</span>
+      <span style="display:flex;flex-direction:column;gap:4px"><b style="font-size:14px">{{ toastTitle }}</b><span>{{ toastText }}</span><sc-if value="{{ toastHasA }}" hint-placeholder-val="{{ false }}"><span style="display:flex;gap:8px;margin-top:6px"><button onClick="{{ toastA }}" style="all:unset;cursor:pointer;background:#FFFFFF;color:#18181B;padding:4px 10px;border-radius:6px;font-weight:500">{{ toastALabel }}</button><button onClick="{{ toastB }}" style="all:unset;cursor:pointer;border:1px solid rgba(255,255,255,.7);padding:4px 10px;border-radius:6px">{{ toastBLabel }}</button></span></sc-if><span style="opacity:.75;font-size:12px">click to close</span></span>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const I=n=>`https://cdn.jsdelivr.net/npm/lucide-static@0.460.0/icons/${n}.svg`;
+const C={green:'#15803D',red:'#B91C1C',blue:'#1D4ED8',grey:'#71717A',amber:'#B45309'};
+const ST={applied:['Applied',C.green],superseded:['Superseded',C.grey],rejected:['Rejected',C.red],request:['Request',C.blue],noimpact:['No impact',C.grey],infeasible:['Applied · infeasible',C.red]};
+const NODEPOS={reader:{x:130,y:110,w:220},resolver:{x:150,y:470,w:200},planner:{x:430,y:110,w:230},checks:{x:440,y:470,w:220}};
+const EDGES=['M72 265 H100 V190 H130','M350 190 H380 V440 H120 V520 H150','M350 520 H400 V160 H430','M545 404 V470','M660 520 H690 V485 H720'];
+const PORTS=[[72,265],[130,190],[350,190],[150,520],[350,520],[430,160],[545,404],[545,470],[660,520],[720,485]];
+const N=x=>x==null?'not reported':Number(x).toLocaleString('en-US');
+
+class Component extends DCLogic {
+  state={drawer:false,toast:null,d:null,err:'',presets:[],view:0,sel:{t:'node',id:'planner'},insp:'inspect',side:'checks',q:'',closed:{},draft:'',running:false,zoom:1};
+  componentDidMount(){this.load();fetch('/api/presets').then(r=>r.json()).then(p=>this.setState({presets:p})).catch(()=>{});}
+  load(){fetch('/api/state',{cache:'no-store'}).then(r=>r.json()).then(d=>this.setState({d,view:d.runs?d.runs.length:0,err:''})).catch(e=>this.setState({err:'Cannot reach the planner server: '+e}));}
+  mkToast(nd,n0){const nm=(nd.msgs||[]).slice(n0);if(!nm.length)return{icon:'⚠️',bg:'#B45309',title:'No new message read',text:'The model call failed or found nothing; the text stays in the file. Wait 10 s and retry.'};
+    const m=nm[nm.length-1],g=m.guardian||{},dd=g.decision||m.statusText;
+    if(dd==='QUARANTINED')return{icon:'🛡️',bg:'#B91C1C',title:'Message blocked',text:'It tries to change the planner\'s instructions or asks for secrets, so it was ignored. Your plan is unchanged.'};
+    if(dd==='REJECTED')return{icon:'⛔',bg:'#B91C1C',title:'Change not applied',text:(g.reason||m.reason)};
+    if(nd.needs&&nd.needs.length){const n=nd.needs[0],area=/venue/i.test(n)?'venue':/cater|food/i.test(n)?'food':/judge|team size/i.test(n)?'judging':'';
+      const T={venue:['Venue options: <name> seats <number> for Rs <price>; <name> seats <number> for Rs <price>.','Skip the venue, we will arrange it ourselves.'],
+               food:['Catering: Rs <price> per person.','Skip catering, food is not needed.'],
+               judging:['Judges: <number> available, Rs <fee> each, <minutes> minutes per team, max <number> teams per judge.','Skip judging, there is no judging.']}[area];
+      return{icon:'📝',bg:'#B45309',title:'Plan started — a few details needed',text:'Please provide: '+nd.needs.join('; ')+'.',
+        a:T?`Provide ${area}`:'',af:()=>T&&this.setState({draft:T[0],insp:'add'}),b:T?`Skip ${area}`:'',bf:()=>T&&this.post(T[1])};}
+    if(!nd.complete)return{icon:'⚠️',bg:'#B45309',title:'Plan needs attention',text:nd.infeasible||'See the plan for details.'};
+    return{a:'View plan',af:()=>window.open('/plan','_blank'),b:'Download plan.md',bf:()=>this.download('plan.md',nd.planMd||''),icon:'✅',bg:'#15803D',title:nm.length>1||nd.runs.length===1?'Your plan is ready':'Plan updated',text:`Total Rs ${nd.plan.total} of Rs ${nd.plan.budget} · Rs ${nd.plan.remaining} left · ${(nd.checks||[]).filter(c=>c.ok).length}/6 checks passed`};}
+  post(text){const d=this.state.d||{};this.setState({running:true,toast:null});fetch('/api/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})}).then(r=>r.json()).then(nd=>this.setState({toast:this.mkToast(nd,nd.newEvent?0:(d.msgs||[]).length),d:nd,view:(nd.runs||[]).length,draft:'',running:false,insp:'inspect',sel:{t:'node',id:'planner'}})).catch(e=>this.setState({running:false,err:'Update failed: '+e}));}
+  download(name,text){const b=new Blob([text],{type:'text/plain'});const u=URL.createObjectURL(b);const el=document.createElement('a');el.href=u;el.download=name;el.click();setTimeout(()=>URL.revokeObjectURL(u),500);}
+  renderVals(){
+    const s=this.state,d=s.d||{runs:[],msgs:[],checks:[],file:'pack.txt',calls:0,tokens:0};
+    const runs=d.runs||[],maxRun=runs.length,view=Math.max(1,Math.min(s.view||maxRun,maxRun)),R=runs[view-1]||{calls:[],code:'',decisions:'',areas:[],tokens:0,cum:0,kind:'-',time:'',r:0};
+    const P=d.plan||null,checks=(d.checks||[]).map(c=>[c.name,c.ok,c.detail]),pass=checks.filter(c=>c[1]).length;
+    const sec=R.calls.reduce((a,c)=>a+(c.secs||0),0);
+    const call=R.calls.find(c=>!c.error)||R.calls[0]||{model:'-',area:'reading',prompt:null,completion:null,total:null,secs:0,input:'',output:''};
+    // messages
+    const msgs=d.msgs||[];const q=s.q.trim().toLowerCase();
+    const selMsg=s.sel.t==='msg'?msgs.find(m=>m.i===s.sel.i):null;
+    const grpOf=x=>x==='infeasible'?'applied':x;
+    const groups=[['applied','Applied'],['rejected','Rejected'],['request','Request'],['superseded','Superseded'],['noimpact','No impact']].map(([id,label])=>{const items=msgs.filter(m=>grpOf(m.status)===id&&(!q||(m.frm+' '+m.reason+' '+m.quotes).toLowerCase().includes(q)));const open=!s.closed[id];return{id,label,count:items.length,open,chev:I(open?'chevron-down':'chevron-right'),toggle:()=>this.setState(st=>({closed:{...st.closed,[id]:!st.closed[id]}})),items:items.map(m=>({label:`${m.i} · ${m.frm}`,full:m.reason,icon:I(m.ch==='email'?'mail':m.ch==='whatsapp'?'message-circle':'clipboard'),border:selMsg&&selMsg.i===m.i?'#2563EB':'#E4E4E7',select:()=>this.setState({sel:{t:'msg',i:m.i},insp:'inspect'})}))};}).filter(g=>g.count>0);
+    // nodes
+    const selNode=s.sel.t==='node'?s.sel.id:null;
+    const row=(icon,k,v,o={})=>({icon:I(icon),k,v:String(v),color:o.color||'#52525B',vfg:o.vfg||'#3F3F46',vbg:o.vbg||'#F4F4F5'});
+    const ok=I('circle-check'),bad=I('circle-x'),inf=!!d.infeasible;
+    const nodeDefs={
+      reader:{title:'Reader',hasTag:true,hasBox:true,boxLabel:'Prompt',boxText:(call.input||'').slice(0,150)+'…',rows:[row('cpu','Model',call.model),row('tag','Area',call.area,{vfg:'#1D4ED8',vbg:'#DBEAFE'}),row('coins','Tokens',N(R.tokens),{vfg:C.amber,vbg:'#FEF3C7'}),row('timer','Elapsed',sec.toFixed(3)+' s')],status:!R.failed&&R.calls.some(c=>!c.error)},
+      resolver:{title:'Resolver',rows:[row('shield-check','Authority matrix','code'),row('history','Latest from owner wins','code'),row('calculator','Derived values locked','code')],status:!R.failed},
+      planner:{title:'Planner',rows:P?[row('building-2','Venue',P.venue),row('calendar-clock','Schedule',P.schedule),row('utensils','Food',P.food),row('gavel','Judging',P.judging,inf?{vfg:C.red,vbg:'#FEE2E2'}:{}),row('wallet','Budget',P.budgetLine)]:[row('circle-minus','Plan','not yet')],status:!!P&&!inf},
+      checks:{title:'Six checks',rows:checks.length?checks.map(([n,o])=>row(o?'check':'x',n,o?'Pass':'Fail',{color:o?C.green:C.red,vfg:o?C.green:C.red,vbg:o?'#DCFCE7':'#FEE2E2'})):[row('circle-minus','Checks','not run')],status:pass===6&&!inf}
+    };
+    const nodes=Object.entries(nodeDefs).map(([id,x])=>({...NODEPOS[id],...x,hasTag:!!x.hasTag,hasBox:!!x.hasBox,boxLabel:x.boxLabel||'',boxText:x.boxText||'',statusIcon:x.status?ok:bad,statusColor:x.status?'#16A34A':C.red,border:selNode===id?'#2563EB':'#E4E4E7',shadow:selNode===id?'0 0 0 3px rgba(37,99,235,0.15)':'0 1px 2px rgba(0,0,0,0.05)',select:()=>this.setState({sel:{t:'node',id},insp:'inspect'})}));
+    // inspector
+    let selTitle,selIcon,selStatus,selStatusFg,fields,boxes;
+    const mono="ui-monospace,'SF Mono',Menlo,monospace",sans='Inter,ui-sans-serif,system-ui,sans-serif';
+    const runTag=`Run ${R.r} · ${R.kind} · ${R.time}`;
+    if(selMsg){const st=ST[selMsg.status]||ST.noimpact;selTitle=`Message ${selMsg.i}`;selIcon=I(selMsg.ch==='email'?'mail':selMsg.ch==='whatsapp'?'message-circle':'clipboard');selStatus=st[0];selStatusFg=st[1];
+      fields=[['Sender',selMsg.frm],['Channel',selMsg.ch==='whatsapp'?'WhatsApp':selMsg.ch],['Date',selMsg.date]];
+      boxes=[{label:'Message',text:selMsg.text||selMsg.quotes,font:sans},{label:'Decision',text:selMsg.decision,font:sans},{label:'Extracted facts',text:selMsg.facts,font:mono}];}
+    else{const id=selNode;selIcon=I({reader:'sparkles',resolver:'scale',planner:'layout-list',checks:'list-checks'}[id]);selTitle=nodeDefs[id].title;const okN=nodeDefs[id].status;selStatus=okN?'Success':'Failed';selStatusFg=okN?C.green:C.red;
+      if(id==='reader'){fields=[['Run',runTag],['Model',call.model],['Area tag',call.area],['Tokens',`${N(call.prompt)} prompt · ${N(call.completion)} completion`],['Elapsed',sec.toFixed(3)+' s'],['Session',`${d.calls} calls · ${N(d.tokens)} tokens`]];
+        boxes=R.calls.length?R.calls.flatMap((c,j)=>[{label:R.calls.length>1?`Input #${c.n}`:'Input',text:c.input,font:sans},{label:R.calls.length>1?`Output #${c.n}`:'Output',text:c.error||c.output,font:mono}]):[{label:'Input',text:'No model call yet. Run: python run.py '+d.file,font:sans}];}
+      else if(id==='resolver'){fields=[['Run',runTag],['Runs as','Plain code · 0 tokens']];boxes=[{label:'Decisions',text:R.decisions||'none',font:mono},{label:'Rule order',text:'1 Ungrounded number → dropped\n2 Derived claim → rejected\n3 No authority → rejected or request\n4 Breaks a standing rule → rejected\n5 Internally inconsistent → rejected\n6 Stale → superseded\n7 Newer from owner → applied\n8 Request from non-owner → optional\n9 No facts → no impact',font:sans}];}
+      else if(id==='planner'){fields=[['Run',runTag],['Runs as','Plain code · 0 tokens'],['Recomputed',R.areas.length?R.areas.join(', '):'nothing']];boxes=P?[{label:'Derived figures',text:P.derived,font:mono},{label:'Budget',text:P.budgetTxt,font:mono},{label:'Schedule',text:P.scheduleTxt,font:mono},...(P.gridTxt?[{label:'Judging grid',text:P.gridTxt,font:mono}]:[])]:[{label:'Plan',text:'No plan yet.',font:sans}];}
+      else{fields=[['Run',runTag],['Runs as','Plain code · 0 tokens'],['Result',`${pass} of 6 pass`]];boxes=[{label:inf?'Why it fails':'Result',text:inf?((d.needs&&d.needs.length)?'Details needed:\n'+d.needs.join('\n'):d.infeasible+'\nThe last valid plan is shown.'):'All six checks pass. Plan written to out/plan.md.',font:sans}];}}
+    fields=fields.map(([k,v])=>({k,v,fg:'#18181B'}));
+    // side
+    const sideRows=s.side==='checks'?checks.map(([n,o])=>({name:n,icon:I(o?'circle-check':'circle-x'),color:o?'#16A34A':C.red,value:o?'Pass':'Fail',vfg:o?C.green:C.red})):(P?[['users','Headcount',P.headcount],['users-round','Teams',P.teams],['gavel','Judges',P.judges],['wallet','Total',P.total],['piggy-bank','Remaining',P.remaining],['coins','Session tokens',N(d.tokens)]]:[]).map(r=>({icon:I(r[0]),name:r[1],value:String(r[2]),color:'#71717A',vfg:'#18181B'}));
+    const sideTabs=[['checks','Checks'],['figures','Figures']].map(([id,label])=>{const on=s.side===id;return{label,bg:on?'#FFFFFF':'transparent',fg:on?'#18181B':'#71717A',shadow:on?'0 1px 2px rgba(0,0,0,0.08)':'none',select:()=>this.setState({side:id})};});
+    const runList=runs.map(r=>({label:`Run ${r.r} · ${r.title}`,icon:I(r.failed?'circle-x':r.icon),color:r.failed?'#DC2626':r.color,bg:r.r===view?'#F4F4F5':'transparent',select:()=>this.setState({view:r.r})}));
+    const rail=[['drawer',s.drawer?'panel-left-close':'panel-left-open','Runs & messages'],['inspect','workflow','Pipeline'],['add','message-square-plus','Add message']].map(([id,icon,label])=>{const on=id==='drawer'?s.drawer:s.insp===id;return{icon:I(icon),label,bg:on?'#E4E4E7':'transparent',fg:on?'#18181B':'#52525B',select:()=>id==='drawer'?this.setState({drawer:!s.drawer}):this.setState({insp:id})};});
+    const inspTabs=[['inspect','Inspector'],['add','Add message']].map(([id,label])=>{const on=s.insp===id;return{label,bg:on?'#FFFFFF':'transparent',fg:on?'#18181B':'#71717A',shadow:on?'0 1px 2px rgba(0,0,0,0.08)':'none',select:()=>this.setState({insp:id})};});
+    const quick=(s.presets||[]).map(p=>({label:p.label,fg:'#27272A',onClick:()=>this.setState({draft:p.text})}));
+    const can=!s.running&&(!!s.draft.trim()||!maxRun);
+    return{
+      drawer:s.drawer,gridCols:s.drawer?'48px 210px 282px minmax(0,1fr) 372px':'48px minmax(0,1fr) 372px',
+      toastHasA:!!(s.toast&&s.toast.a),toastALabel:s.toast?s.toast.a||'':'',toastBLabel:s.toast?s.toast.b||'':'',toastA:()=>s.toast&&s.toast.af&&s.toast.af(),toastB:()=>s.toast&&s.toast.bf&&s.toast.bf(),
+      delPlan:()=>{if(!window.confirm('Delete this plan? Its messages move to events/trash.'))return;fetch('/api/delete',{method:'POST'}).then(r=>r.json()).then(nd=>this.setState({d:nd,view:0,toast:{icon:'🗑️',bg:'#52525B',title:'Plan deleted',text:'Start a new plan: click Add message and describe your event.'},insp:'add'}));},
+      toastShow:!!s.toast,toastIcon:s.toast?s.toast.icon:'',toastBg:s.toast?s.toast.bg:'#15803D',toastTitle:s.toast?s.toast.title:'',toastText:s.toast?s.toast.text:'',toastClose:()=>this.setState({toast:null}),
+      fileName:d.file,fileMeta:`${d.nmsgs||0} messages`,checksLabel:checks.length?`${pass}/6 checks`:'no plan yet',checksBg:pass===6&&!inf?'#DCFCE7':'#FEE2E2',checksFg:pass===6&&!inf?C.green:C.red,checksIcon:I(pass===6&&!inf?'circle-check':'circle-x'),
+      dlPlan:()=>this.download('plan.md',d.planMd||''),dlTrace:()=>this.download('trace.txt',d.traceTxt||''),
+      rail,runs:runList,goAdd:()=>this.setState({insp:'add'}),sideTabs,sideRows,
+      q:s.q,onQ:e=>this.setState({q:e.target.value}),groups,
+      infeasible:inf,infeasibleText:(d.needs&&d.needs.length)?`Details needed: ${d.needs.join('; ')}.`:`Infeasible: ${d.infeasible||''}. Last valid plan kept.`,
+      runBadge:s.err?s.err:s.running?`Running update · reading call #${(d.calls||0)+1}…`:maxRun?`Run ${view} of ${maxRun} · ${N(R.tokens)} tokens · ${sec.toFixed(3)} s`:'No runs yet: click Add message → Run update',
+      zoom:s.zoom,zoomIn:()=>this.setState(st=>({zoom:Math.min(1.5,+(st.zoom+0.1).toFixed(2))})),zoomOut:()=>this.setState(st=>({zoom:Math.max(0.6,+(st.zoom-0.1).toFixed(2))})),zoomFit:()=>this.setState({zoom:1}),
+      edges:EDGES.map(x=>({d:x})),ports:PORTS.map(([x,y])=>({x,y})),nodes,
+      inspTabs,isInspect:s.insp==='inspect',isAdd:s.insp==='add',selTitle,selIcon,selStatus,selStatusFg,fields,boxes,
+      draft:s.draft,onDraft:e=>this.setState({draft:e.target.value}),quick,sendBg:can?'#2563EB':'#A1A1AA',sendLabel:s.running?'Running…':maxRun?'Run update':'Run full pack',
+      send:()=>{if(!can)return;this.post(s.draft.trim());}
+    };
+  }
+}
+</script>
+</body>
+</html>

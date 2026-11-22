@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>body{margin:0;background:#FFFFFF;color:#57657a;font-family:Söhne,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum"}a{color:#0033FF;text-decoration:none}a:hover{color:#0A0F1A}*{box-sizing:border-box}</style>
+</helmet>
+<div style="max-width:1200px;margin:0 auto;padding:0 40px 120px">
+
+<header style="display:flex;align-items:center;gap:28px;padding:18px 0;border-bottom:1px solid #E3E7ED">
+  <span style="color:#0A0F1A;font-weight:500;font-size:15px">Mind to Machine <span style="color:#57657a;font-weight:400">Planner</span></span>
+  <span style="font-size:14px">Brand guide, v2, 18 Nov 2026</span>
+  <a href="Planner Report.dc.html" style="margin-left:auto;font-size:14px">Open the planner</a>
+</header>
+
+<section style="padding:96px 0 80px;display:flex;flex-direction:column;gap:24px;max-width:900px">
+  <h1 style="margin:0;font-size:64px;font-weight:500;line-height:64px;letter-spacing:-1.54px;color:#0033FF;text-wrap:balance">One model reads. Code decides. Every number has a source.</h1>
+  <p style="margin:0;font-size:20px;line-height:25px;color:#57657a;max-width:680px">The planner is read by judges under time pressure. The interface works like a printed report: one clear result at the top, then plain tables that show where each figure came from.</p>
+</section>
+
+<section style="display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px 72px;padding:48px 0;border-top:1px solid #0A0F1A">
+  <h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A">Type</h2>
+  <div style="display:flex;flex-direction:column;gap:40px">
+    <p style="margin:0;font-size:15px;line-height:22px;max-width:620px">One family: Söhne, falling back to the system UI font. Hierarchy comes from size and colour, not from weight or capitals. Code and the trace use the system monospace.</p>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:28px 0;border-bottom:1px solid #E3E7ED;align-items:baseline"><span style="font-size:14px">Headline<br>64 / 64, 500, −1.54</span><span style="font-size:64px;font-weight:500;line-height:64px;letter-spacing:-1.54px;color:#0033FF">Rs 597,400</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:24px 0;border-bottom:1px solid #E3E7ED;align-items:baseline"><span style="font-size:14px">Lead<br>20 / 25, 400</span><span style="font-size:20px;line-height:25px">Full run over 8 messages with one reading call.</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:24px 0;border-bottom:1px solid #E3E7ED;align-items:baseline"><span style="font-size:14px">Figure<br>32 / 36, 500</span><span style="font-size:32px;line-height:36px;font-weight:500;letter-spacing:-0.6px;color:#0A0F1A">177</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:24px 0;border-bottom:1px solid #E3E7ED;align-items:baseline"><span style="font-size:14px">Section<br>20, 500</span><span style="font-size:20px;font-weight:500;color:#0A0F1A">Budget</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:24px 0;border-bottom:1px solid #E3E7ED;align-items:baseline"><span style="font-size:14px">Body<br>15 / 22, 400</span><span style="font-size:15px;line-height:22px;color:#0A0F1A">Hall A is the cheapest available option with at least 177 seats.</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:24px 0;border-bottom:1px solid #E3E7ED;align-items:baseline"><span style="font-size:14px">Trace<br>mono 13 / 20</span><span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;line-height:20px;color:#0A0F1A">[#1] model=llama-3.1-8b-instant  area=reading</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px 72px;padding:48px 0;border-top:1px solid #0A0F1A">
+  <h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A">Colour</h2>
+  <div style="display:flex;flex-direction:column;gap:40px">
+    <p style="margin:0;font-size:15px;line-height:22px;max-width:620px">White page, near-black ink, slate for running text. Blue is the only accent: the headline, links, the primary button and the judging block. Status is shown with coloured words only, never with filled badges.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px 24px">
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:120px;background:#0033FF"></div><span style="color:#0A0F1A;font-size:15px">Blue</span><span style="font-size:13px">#0033FF · headline, links, action</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:120px;background:#0A0F1A"></div><span style="color:#0A0F1A;font-size:15px">Ink</span><span style="font-size:13px">#0A0F1A · figures, table rules</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:120px;background:#57657a"></div><span style="color:#0A0F1A;font-size:15px">Slate</span><span style="font-size:13px">#57657A · running text</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:120px;background:#E3E7ED"></div><span style="color:#0A0F1A;font-size:15px">Rule</span><span style="font-size:13px">#E3E7ED · hairlines</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><div style="height:120px;background:#F7F8FA;border:1px solid #E3E7ED"></div><span style="color:#0A0F1A;font-size:15px">Paper</span><span style="font-size:13px">#F7F8FA · trace blocks</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:8px 0;border-bottom:1px solid #0A0F1A;font-size:13px"><span>Status word</span><span>Used for</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:12px 0;border-bottom:1px solid #E3E7ED;font-size:15px"><span style="color:#0B7A4B;font-weight:500">Applied · Pass</span><span>#0B7A4B. A fact used in the plan; a passing check.</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:12px 0;border-bottom:1px solid #E3E7ED;font-size:15px"><span style="color:#C8102E;font-weight:500">Rejected · Fail</span><span>#C8102E. A wrong message, a failed check, an infeasible plan.</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:12px 0;border-bottom:1px solid #E3E7ED;font-size:15px"><span style="color:#0033FF;font-weight:500">Request, included</span><span>#0033FF. An optional ask from someone who doesn’t own the decision.</span></div>
+      <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:12px 0;border-bottom:1px solid #E3E7ED;font-size:15px"><span style="color:#8A94A6;font-weight:500">Superseded · No impact</span><span>#8A94A6. Replaced by a newer message, or no effect on the plan.</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px 72px;padding:48px 0;border-top:1px solid #0A0F1A">
+  <h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A">Layout</h2>
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:620px;font-size:15px;line-height:22px">
+    <p style="margin:0">Single column, 1200 px wide, 40 px margins. Sections are separated by a black rule and a heading, not by boxes. Tables use a black header rule and grey row rules. Numbers are right-aligned with tabular figures.</p>
+    <p style="margin:0">No cards, shadows, pills, gradients, icons or uppercase labels. Corners are 4 px on inputs and buttons only.</p>
+    <p style="margin:0">The page always reads in this order: the result, the six checks, the key figures, then the detail.</p>
+  </div>
+</section>
+
+<section style="display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px 72px;padding:48px 0;border-top:1px solid #0A0F1A">
+  <h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A">Writing</h2>
+  <div style="display:flex;flex-direction:column;gap:28px;max-width:720px">
+    <p style="margin:0;font-size:15px;line-height:22px">Every decision states what was claimed, what was computed, and what happens next. Use full sentences. Write money as Rs 597,400 and time as 13:00.</p>
+    <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px">Write</span><p style="margin:0;font-size:20px;line-height:25px;color:#0A0F1A">Box count is derived, not set by a vendor. Boxes equal headcount: 150 students, 17 judges and 10 staff make 177. The order stays at 177.</p></div>
+    <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px">Avoid</span><p style="margin:0;font-size:20px;line-height:25px;color:#8A94A6;text-decoration:line-through">⚠️ Suspicious message detected and blocked!</p></div>
+  </div>
+</section>
+
+<section style="display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px 72px;padding:48px 0;border-top:1px solid #0A0F1A">
+  <h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A">Controls</h2>
+  <div style="display:flex;flex-direction:column;gap:20px;max-width:720px">
+    <div style="display:flex;gap:14px"><div style="flex:1;border:1px solid #C9D0DA;border-radius:4px;padding:12px 14px;font-size:16px;color:#8A94A6">Paste the next message exactly as released</div><span style="background:#0033FF;color:#FFFFFF;border-radius:4px;padding:12px 22px;font-size:15px;font-weight:500">Run update</span></div>
+    <div style="display:flex;gap:28px;font-size:17px"><span style="color:#0A0F1A;border-bottom:2px solid #0A0F1A;padding-bottom:10px">Plan</span><span style="padding-bottom:10px">Messages</span><span style="padding-bottom:10px">Trace</span><span style="padding-bottom:10px">Changes</span></div>
+  </div>
+</section>
+
+</div>
+</x-dc>
+</body>
+</html>

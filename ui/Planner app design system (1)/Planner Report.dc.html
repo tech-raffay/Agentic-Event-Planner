@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>body{margin:0;background:#FFFFFF;color:#57657a;font-family:Söhne,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum"}a{color:#0033FF;text-decoration:none}a:hover{color:#0A0F1A}*{box-sizing:border-box}textarea,button,input{font-family:inherit}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<header style="border-bottom:1px solid #E3E7ED">
+  <div style="max-width:1200px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+    <a href="Brand Guide.dc.html" style="color:#0A0F1A;font-weight:500;font-size:15px;letter-spacing:-0.2px">Mind to Machine <span style="color:#57657a;font-weight:400">Planner</span></a>
+    <span style="font-size:14px">{{ fileMeta }}</span>
+    <div style="margin-left:auto;display:flex;gap:22px;font-size:14px">
+      <button onClick="{{ dlPlan }}" style="all:unset;cursor:pointer;color:#0033FF" style-hover="color:#0A0F1A">Download plan.md</button>
+      <button onClick="{{ dlTrace }}" style="all:unset;cursor:pointer;color:#0033FF" style-hover="color:#0A0F1A">Download trace.txt</button>
+    </div>
+  </div>
+</header>
+
+<section style="max-width:1200px;width:100%;margin:0 auto;padding:64px 40px 48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:56px 72px;align-items:start">
+  <div style="display:flex;flex-direction:column;gap:20px;grid-column:span 2;min-width:0">
+    <span style="font-size:15px;color:#57657a">{{ heroMeta }}</span>
+    <h1 style="margin:0;font-size:64px;font-weight:500;line-height:64px;letter-spacing:-1.54px;color:#0033FF;text-wrap:balance">{{ headline }}</h1>
+    <p style="margin:0;font-size:20px;font-weight:400;line-height:25px;color:#57657a;max-width:720px;text-wrap:pretty">{{ subline }}</p>
+  </div>
+  <div style="display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid #0A0F1A;font-size:15px"><span style="color:#0A0F1A;font-weight:500">Checks</span><span style="color:{{ passFg }}">{{ passText }}</span></div>
+    <sc-for list="{{ checks }}" as="c" hint-placeholder-count="6">
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #E3E7ED;font-size:15px"><span>{{ c.name }}</span><span style="color:{{ c.fg }}">{{ c.result }}</span></div>
+    </sc-for>
+  </div>
+</section>
+
+<section style="max-width:1200px;width:100%;margin:0 auto;padding:0 40px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid #E3E7ED;border-bottom:1px solid #E3E7ED">
+    <sc-for list="{{ figures }}" as="f" hint-placeholder-count="5">
+      <div style="padding:22px 20px 22px 0;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:14px">{{ f.label }}</span>
+        <span style="font-size:32px;line-height:36px;font-weight:500;letter-spacing:-0.6px;color:{{ f.fg }}">{{ f.value }}</span>
+        <span style="font-size:13px">{{ f.note }}</span>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section style="max-width:1200px;width:100%;margin:0 auto;padding:36px 40px 0;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:space-between">
+  <div style="display:flex;gap:28px">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+      <button onClick="{{ t.select }}" style="all:unset;cursor:pointer;font-size:17px;padding-bottom:10px;color:{{ t.fg }};border-bottom:2px solid {{ t.line }}">{{ t.label }}</button>
+    </sc-for>
+  </div>
+  <div style="display:flex;gap:4px;align-items:center;padding-bottom:10px;font-size:14px">
+    <span style="margin-right:8px">Run</span>
+    <sc-for list="{{ runTabs }}" as="r" hint-placeholder-count="3">
+      <button onClick="{{ r.select }}" title="{{ r.title }}" style="all:unset;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:4px;background:{{ r.bg }};color:{{ r.fg }};font-size:14px">{{ r.n }}</button>
+    </sc-for>
+  </div>
+</section>
+
+<main style="max-width:1200px;width:100%;margin:0 auto;padding:36px 40px 140px;flex:1">
+
+<sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="Plan" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:56px 72px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A;letter-spacing:-0.3px">Venue</h2>
+      <p style="margin:0;font-size:15px;line-height:22px">Hall A is the cheapest available option with at least 177 seats. Prices and seats from message 2.</p>
+      <div style="display:flex;flex-direction:column;margin-top:6px">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 70px 100px 150px;gap:12px;padding:8px 0;border-bottom:1px solid #0A0F1A;font-size:13px"><span>Option</span><span style="text-align:right">Seats</span><span style="text-align:right">Rs</span><span>Decision</span></div>
+        <sc-for list="{{ venues }}" as="v" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 70px 100px 150px;gap:12px;padding:11px 0;border-bottom:1px solid #E3E7ED;font-size:15px">
+            <span style="color:#0A0F1A;font-weight:{{ v.weight }}">{{ v.name }}</span><span style="text-align:right">{{ v.seats }}</span><span style="text-align:right;color:#0A0F1A">{{ v.price }}</span><span style="color:{{ v.fg }}">{{ v.verdict }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A;letter-spacing:-0.3px">Food</h2>
+      <p style="margin:0;font-size:15px;line-height:22px">Standard lunch box at the 12 Nov price. One box per person; the count always equals headcount.</p>
+      <div style="display:flex;flex-direction:column;margin-top:6px">
+        <sc-for list="{{ food }}" as="r" hint-placeholder-count="5">
+          <div style="display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid #E3E7ED;font-size:15px"><span>{{ r.k }}</span><span style="color:#0A0F1A;text-align:right;font-weight:{{ r.weight }}">{{ r.v }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;grid-column:1 / -1">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A;letter-spacing:-0.3px">Schedule</h2><span style="font-size:14px">240 minutes. The 10:00 start is a planner assumption; the pack gives none.</span></div>
+      <div style="display:flex;margin-top:8px;border-left:1px solid #0A0F1A">
+        <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+          <div style="flex:{{ b.min }} 1 0;min-width:0;display:flex;flex-direction:column;gap:8px;border-right:1px solid #0A0F1A;padding:0 8px">
+            <span style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.start }}</span>
+            <div style="height:28px;background:{{ b.bg }};margin:0 -8px"></div>
+            <span style="font-size:13px;color:#0A0F1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.short }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;margin-top:10px">
+        <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:130px minmax(0,1fr) 80px 160px;gap:12px;padding:11px 0;border-bottom:1px solid #E3E7ED;font-size:15px">
+            <span>{{ b.time }}</span><span style="color:#0A0F1A">{{ b.name }}</span><span style="text-align:right;color:#0A0F1A">{{ b.min }} min</span><span style="text-align:right">{{ b.src }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;grid-column:1 / -1">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A;letter-spacing:-0.3px">Judging</h2><span style="font-size:14px">{{ judgingNote }}</span></div>
+      <p style="margin:0;font-size:15px;line-height:22px;max-width:760px">50 teams, at most 3 per judge, so 17 judges are needed. Three 15-minute rounds run in parallel from 13:00. Team t goes to judge t mod 17.</p>
+      <div style="overflow-x:auto;margin-top:6px">
+        <div style="display:grid;grid-template-columns:72px repeat(17,minmax(38px,1fr));min-width:780px">
+          <span style="font-size:13px;padding:8px 0;border-bottom:1px solid #0A0F1A">Round</span>
+          <sc-for list="{{ judgeCols }}" as="j" hint-placeholder-count="17"><span style="font-size:13px;padding:8px 0;border-bottom:1px solid #0A0F1A;text-align:center">{{ j }}</span></sc-for>
+          <sc-for list="{{ rounds }}" as="r" hint-placeholder-count="3">
+            <span style="font-size:14px;padding:10px 0;border-bottom:1px solid #E3E7ED">{{ r.time }}</span>
+            <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="17"><span style="font-size:14px;padding:10px 0;border-bottom:1px solid #E3E7ED;text-align:center;color:{{ c.fg }}">{{ c.t }}</span></sc-for>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;grid-column:1 / -1">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A;letter-spacing:-0.3px">Budget</h2><span style="font-size:14px">{{ budgetNote }}</span></div>
+      <div style="display:flex;height:8px;margin-top:8px;gap:2px">
+        <sc-for list="{{ bar }}" as="s" hint-placeholder-count="6"><div title="{{ s.label }}" style="flex:{{ s.v }} 1 0;background:{{ s.bg }}"></div></sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;margin-top:10px">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 160px 100px 120px;gap:12px;padding:8px 0;border-bottom:1px solid #0A0F1A;font-size:13px"><span>Line</span><span>Basis</span><span>Source</span><span style="text-align:right">Rs</span></div>
+        <sc-for list="{{ budgetRows }}" as="b" hint-placeholder-count="10">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 160px 100px 120px;gap:12px;padding:11px 0;border-bottom:1px solid {{ b.line }};font-size:15px">
+            <span style="color:{{ b.labelFg }};font-weight:{{ b.weight }}">{{ b.label }}</span><span>{{ b.basis }}</span><span>{{ b.src }}</span><span style="text-align:right;color:{{ b.fg }};font-weight:{{ b.weight }}">{{ b.amount }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isMessages }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Messages" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-wrap:wrap;gap:22px;font-size:15px">
+      <sc-for list="{{ msgFilters }}" as="f" hint-placeholder-count="6">
+        <button onClick="{{ f.select }}" style="all:unset;cursor:pointer;color:{{ f.fg }};text-decoration:{{ f.deco }};text-underline-offset:5px">{{ f.label }} {{ f.count }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:grid;grid-template-columns:40px minmax(0,1.2fr) minmax(0,1fr);gap:28px;padding:8px 0;border-bottom:1px solid #0A0F1A;font-size:13px"><span>#</span><span>Message, as received</span><span>Decision</span></div>
+      <sc-for list="{{ ledger }}" as="m" hint-placeholder-count="8">
+        <div style="display:grid;grid-template-columns:40px minmax(0,1.2fr) minmax(0,1fr);gap:28px;padding:20px 0;border-bottom:1px solid #E3E7ED">
+          <span style="font-size:15px;color:#0A0F1A">{{ m.i }}</span>
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="font-size:15px"><span style="color:#0A0F1A;font-weight:500">{{ m.from }}</span>, {{ m.ch }}, {{ m.date }}</span>
+            <span style="font-size:15px;line-height:22px;text-wrap:pretty">{{ m.text }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="font-size:15px;font-weight:500;color:{{ m.fg }}">{{ m.label }}</span>
+            <span style="font-size:15px;line-height:22px;color:#0A0F1A;text-wrap:pretty">{{ m.reason }}</span>
+            <span style="font-size:13px;line-height:19px;font-family:ui-monospace,'SF Mono',Menlo,monospace">{{ m.factText }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isTrace }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Trace" style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A;letter-spacing:-0.3px">{{ stepsTitle }}</h2><span style="font-size:14px">Only the reader calls a model. Every other step is plain code.</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid #0A0F1A">
+        <sc-for list="{{ steps }}" as="st" hint-placeholder-count="6">
+          <div style="padding:14px 16px 14px 0;border-bottom:1px solid #E3E7ED;display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:13px">{{ st.n }}</span>
+            <span style="font-size:16px;color:#0A0F1A;font-weight:500">{{ st.name }}</span>
+            <span style="font-size:14px;color:{{ st.fg }}">{{ st.kind }}</span>
+            <span style="font-size:14px">{{ st.time }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px"><h2 style="margin:0;font-size:20px;font-weight:500;color:#0A0F1A;letter-spacing:-0.3px">Trace</h2><span style="font-size:14px">{{ sessionNote }}</span></div>
+      <sc-for list="{{ trace }}" as="tb" hint-placeholder-count="2">
+        <div style="background:#F7F8FA;padding:20px 22px;display:flex;flex-direction:column;gap:3px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;line-height:20px;overflow-x:auto">
+          <span style="color:#0A0F1A;font-weight:600;white-space:pre">{{ tb.head }}</span>
+          <span style="color:#0A0F1A;white-space:pre">{{ tb.callLine }}</span>
+          <span style="color:#0A0F1A;white-space:pre">{{ tb.tokLine }}</span>
+          <button onClick="{{ tb.toggle }}" style="all:unset;cursor:pointer;color:#0033FF;font-family:inherit;font-size:13px;align-self:flex-start;padding:2px 0 6px">{{ tb.toggleLabel }}</button>
+          <sc-if value="{{ tb.open }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:8px">
+              <div style="display:flex;flex-direction:column;gap:6px"><span>INPUT</span><pre style="margin:0;background:#FFFFFF;border:1px solid #E3E7ED;padding:12px;white-space:pre-wrap;word-break:break-word;max-height:280px;overflow:auto;color:#0A0F1A;font:inherit">{{ tb.input }}</pre></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><span>OUTPUT</span><pre style="margin:0;background:#FFFFFF;border:1px solid #E3E7ED;padding:12px;white-space:pre-wrap;word-break:break-word;max-height:280px;overflow:auto;color:#0A0F1A;font:inherit">{{ tb.output }}</pre></div>
+            </div>
+          </sc-if>
+          <sc-for list="{{ tb.lines }}" as="l" hint-placeholder-count="5">
+            <span style="white-space:pre;color:{{ l.fg }}">{{ l.t }}</span>
+          </sc-for>
+          <span style="white-space:pre;margin-top:6px">{{ tb.foot }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isChanges }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Changes" style="display:flex;flex-direction:column;gap:48px">
+    <sc-if value="{{ noChanges }}" hint-placeholder-val="{{ false }}">
+      <p style="margin:0;font-size:20px;line-height:25px;max-width:640px">Run 1 is the baseline. Each message added after it gets a before and after here, with the areas that were recomputed.</p>
+    </sc-if>
+    <sc-for list="{{ changes }}" as="ch" hint-placeholder-count="2">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px 72px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:14px">Run {{ ch.n }}, message {{ ch.m }}</span>
+          <h3 style="margin:0;font-size:24px;line-height:30px;font-weight:500;color:#0A0F1A;letter-spacing:-0.4px">{{ ch.title }}</h3>
+          <span style="font-size:15px;font-weight:500;color:{{ ch.fg }}">{{ ch.result }}</span>
+          <span style="font-size:15px;line-height:22px">Recomputed: {{ ch.areas }}. Model calls: 1, reading, {{ ch.tok }} tokens.</span>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 110px 110px;gap:12px;padding:8px 0;border-bottom:1px solid #0A0F1A;font-size:13px"><span>Figure</span><span style="text-align:right">Before</span><span style="text-align:right">After</span></div>
+          <sc-for list="{{ ch.deltas }}" as="d" hint-placeholder-count="3">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 110px 110px;gap:12px;padding:11px 0;border-bottom:1px solid #E3E7ED;font-size:15px"><span>{{ d.label }}</span><span style="text-align:right">{{ d.from }}</span><span style="text-align:right;color:{{ d.fg }}">{{ d.to }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</sc-if>
+
+</main>
+
+<div style="position:sticky;bottom:0;background:#FFFFFF;border-top:1px solid #E3E7ED">
+  <div style="max-width:1200px;margin:0 auto;padding:16px 40px 18px;display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;gap:14px;align-items:stretch">
+      <input value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onKey }}" placeholder="Paste the next message exactly as released" style="flex:1;min-width:0;border:1px solid #C9D0DA;border-radius:4px;padding:12px 14px;font-size:16px;color:#0A0F1A;outline:none;background:#FFFFFF"></input>
+      <button onClick="{{ send }}" style="all:unset;cursor:pointer;padding:0 22px;border-radius:4px;font-size:15px;font-weight:500;background:{{ sendBg }};color:#FFFFFF;display:flex;align-items:center">{{ sendLabel }}</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px">
+      <span>Appends to pack.txt, then runs python run.py pack.txt. Expected model calls: 1, reading.</span>
+      <span style="display:flex;gap:14px;margin-left:auto">Fill with:
+        <sc-for list="{{ quick }}" as="q" hint-placeholder-count="3"><button onClick="{{ q.onClick }}" style="all:unset;cursor:pointer;color:{{ q.fg }}">{{ q.label }}</button></sc-for>
+      </span>
+    </div>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startRun&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:1,&quot;max&quot;:4,&quot;step&quot;:1,&quot;default&quot;:3,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;initialTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;plan&quot;,&quot;messages&quot;,&quot;trace&quot;,&quot;changes&quot;],&quot;default&quot;:&quot;plan&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo state&quot;}}">
+const N=x=>x.toLocaleString('en-US');
+const MODEL='llama-3.1-8b-instant';
+const TIMES=['11:42','13:31','13:38','13:46','13:52','13:58','14:03','14:09'];
+const AREAS=['venue','schedule','food','judging','budget'];
+const C={ink:'#0A0F1A',body:'#57657a',blue:'#0033FF',green:'#0B7A4B',red:'#C8102E',grey:'#8A94A6'};
+const ST={applied:['Applied',C.green],superseded:['Superseded',C.grey],rejected:['Rejected',C.red],request:['Request, included',C.blue],noimpact:['No impact',C.grey],infeasible:['Applied, plan infeasible',C.red]};
+const BASE=[
+{from:"Dean's office",ch:'email',date:'9 Nov',status:'applied',text:'Approved: a 4-hour hackathon for 150 students in teams of 3. The budget is Rs 650,000, all in. Ten staff will be on duty. Please keep a 15-minute prayer break in the schedule.',reason:'The authority sets event rules: 150 students, teams of 3, 4 hours, Rs 650,000, 10 staff, a 15-minute prayer break.',facts:'students=150 team_size=3 duration_min=240 budget=650000 staff=10 block=prayer/15'},
+{from:'Margalla Event Halls',ch:'email',date:'3 Nov',status:'applied',text:'Room D seats 80 at Rs 40,000. Hall A seats 200 at Rs 120,000. Hall B seats 200 at Rs 150,000. Hall C seats 300 at Rs 220,000. Halls B and C have a standby generator.',reason:'The venue owns its options: four rooms with seats, price and generator.',facts:'venue ×4 (Room D, Hall A, Hall B, Hall C)'},
+{from:'Caterer',ch:'WhatsApp',date:'20 Oct',status:'superseded',text:'Standard lunch box Rs 1,000 per head.',reason:'Same price from the same sender, replaced by the 12 Nov message (4).',facts:'food standard=1000'},
+{from:'Caterer',ch:'WhatsApp',date:'12 Nov',status:'applied',text:'Salam bhai! Standard lunch box ab Rs 1,200 per head hoga, basic wala Rs 800. Delivery free hai.',reason:'Newer price from the caterer: standard Rs 1,200, basic Rs 800, free delivery.',facts:'food standard=1200 basic=800 fee=0'},
+{from:'Judging coordinator',ch:'email',date:'11 Nov',status:'applied',text:'20 judges have confirmed. The honorarium is Rs 5,000 each. A judge needs 15 minutes per team and should cover no more than three teams.',reason:'The coordinator sets judging rules: 20 available, Rs 5,000 each, 15 minutes per team, at most 3 teams per judge.',facts:'judges_available=20 honorarium=5000 min_per_team=15 max_teams_per_judge=3'},
+{from:'Finance',ch:'email',date:'10 Nov',status:'applied',text:'Already ordered from the event budget: prizes Rs 100,000, backup internet Rs 20,000, printing Rs 10,000.',reason:'Finance owns committed spend: prizes, backup internet and printing.',facts:'cost prizes=100000 internet=20000 printing=10000'},
+{from:'Student society',ch:'WhatsApp',date:'13 Nov',status:'request',text:'Can we get a DJ for the closing? The quote is Rs 50,000.',reason:'',facts:'cost DJ=50000 (optional)'},
+{from:'A judge',ch:'WhatsApp',date:'14 Nov',status:'noimpact',text:'I may be 10 minutes late on the day. Traffic on Srinagar Highway.',reason:'Judging starts at 13:00, three hours in, so a 10-minute delay affects nothing.',facts:'late judge=10'}
+];
+const SC={
+print:{chip:'printing Rs 15,000',from:'Finance',ch:'email',date:'18 Nov',status:'applied',text:'Finance here. The printing bill came in at Rs 15,000, not Rs 10,000.',facts:'cost printing=15000',tok:[548,92],sec:1.184,title:'Printing bill revised',areas:['budget'],
+ reason:'Finance owns committed spend and this is newer, so printing goes from Rs 10,000 to Rs 15,000. The old figure in message 6 is superseded.',
+ out:'{"msgs":[{"i":9,"from":"Finance","role":"finance","date":null,"facts":[{"k":"cost","v":{"name":"printing","amount":15000,"status":"committed"},"q":"printing bill came in at Rs 15,000"}],"other":[]}]}'},
+boxes:{chip:'100 boxes',from:'Caterer',ch:'WhatsApp',date:'18 Nov',status:'rejected',text:'Caterer: I have rounded your order down to 100 boxes to keep the cost low.',facts:'claim boxes=100',tok:[541,88],sec:1.107,title:'Caterer changes the order',areas:[],
+ reason:'Box count is derived, not set by a vendor. Boxes equal headcount: 150 students, 17 judges and 10 staff make 177. The order stays at 177.',
+ out:'{"msgs":[{"i":10,"from":"Caterer","role":"caterer","date":null,"facts":[{"k":"claim","v":{"key":"boxes","value":100},"q":"rounded your order down to 100 boxes"}],"other":[]}]}'},
+withdraw:{chip:'4 judges withdrew',from:'Judging coordinator',ch:'email',date:'18 Nov',status:'infeasible',text:'Coordinator here: 4 judges have withdrawn, sorry.',facts:'judges_change=-4',tok:[536,90],sec:1.226,title:'Four judges withdraw',areas:AREAS,
+ reason:'The coordinator owns judge numbers, so 20 becomes 16. The plan needs 17, so no valid plan exists. The last valid plan is kept until one more judge is confirmed.',
+ out:'{"msgs":[{"i":11,"from":"Coordinator","role":"judging","date":null,"facts":[{"k":"judges_change","v":{"delta":-4},"q":"4 judges have withdrawn"}],"other":[]}]}'}
+};
+const PRESETS=['print','boxes','withdraw'];
+const PROMPT='You extract facts for an event planner. Output JSON only, matching the schema.\nRules:\n- One entry per message, in order. Copy sender as written; pick role from the list.\n- Numbers as plain integers. "lakh"=100000, "k"/"hazaar"=1000.\n- Use only keys in the vocabulary. Anything else -> "other".\n- A request -> cost status "optional".\n- Anyone stating a count we compute -> "claim".\n- No arithmetic, no opinions.\n';
+function plan(keys){const printing=keys.includes('print')?15000:10000;const avail=keys.includes('withdraw')?16:20;const committed=120000+printing;const required=committed+120000+85000+212400;const total=required+50000;return{printing,avail,committed,required,total,remaining:650000-total,headroom:650000-required,infeasible:avail<17};}
+
+class Component extends DCLogic {
+  state=this.init();
+  init(){const start=Math.max(1,Math.min(4,this.props.startRun??3));const added=PRESETS.slice(0,start-1).map(k=>({key:k,text:SC[k].text}));return{added,view:start,tab:this.props.initialTab??'plan',msgFilter:'all',open:{},draft:'',running:false};}
+  componentWillUnmount(){clearTimeout(this.t);}
+  run(r,added){
+    const keys=added.slice(0,r-1).map(a=>a.key);const P=plan(keys);const a=r>1?added[r-2]:null;const sc=a?SC[a.key]:null;const m=a?7+r:null;
+    const tok=r===1?[1012,884]:sc?sc.tok:[522,41];const sec=r===1?6.214:sc?sc.sec:0.982;
+    let cum=0;for(let i=1;i<=r;i++){const b=i>1?added[i-2]:null,s=b?SC[b.key]:null;const k=i===1?[1012,884]:s?s.tok:[522,41];cum+=k[0]+k[1];}
+    const L=(tag,text,fg)=>({t:`[code] ${tag.padEnd(10)} ${text}`,fg:fg||C.body});
+    let lines;
+    if(r===1)lines=[L('schema','valid, 8 messages, 27 facts'),L('grounding','27 of 27 numbers found in source text'),L('resolver','msg 3 standard=1,000 SUPERSEDED (newer msg 4, 12 Nov)'),L('resolver','msg 7 DJ 50,000 REQUEST (optional, non-owner)'),L('resolver','msg 8 late judge 10 min NO IMPACT (judging at +3:00)'),L('derive','teams 50, judges 17 of 20, rounds 3, headcount 177'),L('venue','Hall A, cheapest with seats >= 177'),L('optimiser',`standard lunch kept, DJ included (headroom ${N(P.headroom)})`),L('schedule','6 blocks, 240 min, start 10:00 (assumption)'),L('checks',`6/6 PASS  total ${N(P.total)} / 650,000`,C.green)];
+    else if(a.key==='print')lines=[L('grounding','1 of 1 numbers found'),L('resolver',`msg ${m} printing 10,000 -> 15,000 APPLIED (finance, newer)`),L('supersede','msg 6 printing=10,000'),L('recompute','budget only'),L('checks',`6/6 PASS  total ${N(P.total)} / 650,000`,C.green)];
+    else if(a.key==='boxes')lines=[L('grounding','1 of 1 numbers found'),L('resolver',`msg ${m} claim boxes=100 REJECTED: derived value, boxes = headcount 177`,C.red),L('recompute','none, plan untouched'),L('checks',`6/6 PASS  total ${N(P.total)} / 650,000`,C.green)];
+    else if(a.key==='withdraw')lines=[L('resolver',`msg ${m} judges_available 20 -> 16 APPLIED (coordinator)`),L('recompute','judging, schedule, food, venue, budget'),L('solver','17 needed > 16 available, no valid plan',C.red),L('keep',`INFEASIBLE: needs 1 more judge, last valid plan (run ${r-1}) kept`,C.red),L('checks','5/6  enough judges FAIL',C.red)];
+    else lines=[L('resolver',`msg ${m} no facts, NO IMPACT`),L('recompute','none, plan untouched'),L('checks',P.infeasible?'5/6  enough judges FAIL':`6/6 PASS  total ${N(P.total)} / 650,000`,P.infeasible?C.red:C.green)];
+    const input=PROMPT+(r===1?'Messages:\n1 | Dean\'s office, email | 9 Nov | Approved: a 4-hour hackathon for 150 students…\n… 8 messages, raw text exactly as in the file':'Reuse these existing names: Room D, Hall A, Hall B, Hall C, standard, basic, prizes, internet, printing, DJ\nMessages:\n'+m+' | '+a.text);
+    const output=r===1?'{"msgs":[{"i":1,"from":"Dean\'s office","role":"authority","date":"2026-11-09","facts":[{"k":"students","v":150,"q":"150 students in teams of 3"},{"k":"budget","v":650000,"q":"budget is Rs 650,000"}, …]}, … 8 messages]}':sc?sc.out:`{"msgs":[{"i":${m},"from":"Unknown","role":"unknown","facts":[],"other":[]}]}`;
+    return{r,P,a,sc,m,tok,sec,cum,lines,input,output,kind:r===1?'full':'update',time:TIMES[Math.min(r-1,TIMES.length-1)]};
+  }
+  download(name,text){const b=new Blob([text],{type:'text/plain'});const u=URL.createObjectURL(b);const el=document.createElement('a');el.href=u;el.download=name;el.click();setTimeout(()=>URL.revokeObjectURL(u),500);}
+  renderVals(){
+    const s=this.state,added=s.added,maxRun=added.length+1,view=Math.min(s.view,maxRun);
+    const runs=Array.from({length:maxRun},(_,i)=>this.run(i+1,added));
+    const R=runs[view-1],P=R.P,keys=added.slice(0,view-1).map(a=>a.key);
+    const printMsg=keys.includes('print')?9+keys.indexOf('print'):6;
+    // hero
+    let headline,subline;
+    if(view===1){headline=`177 people, Hall A, Rs ${N(P.total)}.`;subline='Full run over 8 messages with one reading call. Five applied, one out of date, one optional request included, one with no effect on the plan.';}
+    else if(!R.sc){headline='No change to the plan.';subline='The new message had no facts the planner uses, so nothing was recomputed.';}
+    else if(R.a.key==='print'){headline=`Printing is now Rs 15,000. Total Rs ${N(P.total)}.`;subline=R.sc.reason+' Only the budget was recomputed.';}
+    else if(R.a.key==='boxes'){headline='Rejected: a vendor can’t set the box count.';subline=R.sc.reason;}
+    else {headline='Infeasible: the plan needs one more judge.';subline=R.sc.reason;}
+    const heroMeta=s.running?`Running update: reading call #${maxRun+1}…`:`Run ${view} of ${maxRun} · ${R.kind} · 18 Nov ${R.time} · ${N(R.tok[0]+R.tok[1])} tokens`;
+    const checks=[['Correct figures',1],['Within budget',1],['Venue fits',1],['Schedule valid',1],['Enough judges',!P.infeasible],['All areas covered',1]].map(([name,ok])=>({name,result:ok?'Pass':'Fail',fg:ok?C.green:C.red}));
+    const pass=checks.filter(c=>c.result==='Pass').length;
+    const figures=[{label:'Headcount',value:'177',note:'150 students, 17 judges, 10 staff'},{label:'Teams',value:'50',note:'150 ÷ 3'},{label:'Judges',value:`17 of ${P.avail}`,note:P.infeasible?'1 short':`${P.avail-17} on standby`,fg:P.infeasible?C.red:C.ink},{label:'Spent',value:'Rs '+N(P.total),note:'of Rs 650,000'},{label:'Remaining',value:'Rs '+N(P.remaining),note:'after optional DJ'}].map(f=>({fg:C.ink,...f}));
+    const tabs=[['plan','Plan'],['messages','Messages'],['trace','Trace'],['changes','Changes']].map(([id,label])=>({label,fg:s.tab===id?C.ink:C.body,line:s.tab===id?C.ink:'transparent',select:()=>this.setState({tab:id})}));
+    const runTabs=runs.map(r=>({n:r.r,title:r.r===1?'Full run':(r.sc?r.sc.title:'Pasted message'),bg:r.r===view?C.ink:'transparent',fg:r.r===view?'#FFFFFF':(r.P.infeasible||(r.a&&r.a.key==='boxes'))?C.red:C.ink,select:()=>this.setState({view:r.r})}));
+    // plan
+    const venues=[['Room D','80','40,000','Too small',C.red,400],['Hall A','200','120,000','Chosen',C.green,500],['Hall B','200','150,000','Fits, +30,000',C.body,400],['Hall C','300','220,000','Fits, +100,000',C.body,400]].map(v=>({name:v[0],seats:v[1],price:v[2],verdict:v[3],fg:v[4],weight:v[5]}));
+    const food=[['Tier','Standard lunch box'],['Boxes','177'],['Price per head','Rs 1,200'],['Delivery','Free'],['Cost','Rs 212,400',500],['Fallback if budget tightens','Basic, Rs 141,600']].map(r=>({k:r[0],v:r[1],weight:r[2]||400}));
+    const blocks=[['10:00','10:00–10:15','Opening and briefing','Opening',15,'planner default','#E3E7ED'],['10:15','10:15–12:15','Build','Build',120,'240 minus the rest','#F2F4F7'],['12:15','12:15–12:30','Prayer break','Prayer',15,'message 1','#E3E7ED'],['12:30','12:30–13:00','Lunch','Lunch',30,'planner default','#F2F4F7'],['13:00','13:00–13:45','Judging, 3 rounds of 15 min','Judging',45,'derived','#0033FF'],['13:45','13:45–14:00','Closing, prizes, DJ','Closing',15,'planner default','#E3E7ED']].map(b=>({start:b[0],time:b[1],name:b[2],short:b[3],min:b[4],src:b[5],bg:b[6]}));
+    const judgeCols=Array.from({length:17},(_,j)=>'J'+(j+1));
+    const rounds=['13:00','13:15','13:30'].map((time,r)=>({time,cells:judgeCols.map((_,j)=>{const t=r*17+j+1;return t<=50?{t:String(t),fg:C.ink}:{t:'–',fg:'#B6BEC9'};})}));
+    const budgetRows=[['Prizes','committed','msg 6','100,000'],['Backup internet','committed','msg 6','20,000'],['Printing','committed','msg '+printMsg,N(P.printing)],['Venue, Hall A','fixed','msg 2','120,000'],["Judges' honorarium",'17 × 5,000','msg 5','85,000'],['Food, standard','177 × 1,200','msg 4','212,400'],['Required subtotal','','',N(P.required),1],['DJ','optional request','msg 7','50,000'],['Total','','',N(P.total),1],['Remaining of 650,000','','',N(P.remaining),2]].map(r=>({label:r[0],basis:r[1],src:r[2],amount:r[3],weight:r[4]===1?500:400,line:r[4]===1?C.ink:'#E3E7ED',labelFg:r[4]?C.ink:C.body,fg:r[4]===2?C.green:C.ink}));
+    const bar=[['Committed',P.committed,'#0A0F1A'],['Venue',120000,'#3A4556'],['Judges',85000,'#6B7787'],['Food',212400,'#9AA4B2'],['DJ',50000,'#0033FF'],['Remaining',P.remaining,'#E3E7ED']].map(b=>({label:`${b[0]} ${N(b[1])}`,v:b[1],bg:b[2]}));
+    // ledger
+    const msgs=BASE.map((m,i)=>({...m,i:i+1}));
+    msgs[6].reason=`A student request, not an approved cost. Included because it fits after required costs, with Rs ${N(P.headroom)} of headroom.`;
+    added.slice(0,view-1).forEach((a,j)=>{const i=9+j,sc=SC[a.key];msgs.push(sc?{...sc,i}:{from:'Unknown sender',ch:'pasted',date:'18 Nov',status:'noimpact',text:a.text,reason:'No facts the planner uses. Nothing recomputed.',facts:'none',i});});
+    if(keys.includes('print'))msgs[5].reason+=` Printing later revised by message ${printMsg}.`;
+    const grp=st=>st==='infeasible'?'applied':st;
+    const all=msgs.map(m=>({...m,label:ST[m.status][0],fg:ST[m.status][1],factText:m.facts}));
+    const msgFilters=[['all','All'],['applied','Applied'],['superseded','Superseded'],['rejected','Rejected'],['request','Request'],['noimpact','No impact']].map(([id,label])=>{const on=s.msgFilter===id;return{label,count:id==='all'?all.length:all.filter(m=>grp(m.status)===id).length,fg:on?C.ink:C.body,deco:on?'underline':'none',select:()=>this.setState({msgFilter:id})};});
+    const ledger=s.msgFilter==='all'?all:all.filter(m=>grp(m.status)===s.msgFilter);
+    // trace
+    const plannerSkipped=R.a&&(R.a.key==='boxes'||!R.sc);
+    const steps=[['Input file','code','0.4 ms'],['Reader','model, reading',`${R.sec.toFixed(3)} s · ${N(R.tok[0]+R.tok[1])} tokens`],['Resolver','code','0.6 ms'],['Planner','code',plannerSkipped?'skipped, nothing changed':'1.2 ms'],['Checks','code',P.infeasible?'0.3 ms · 5 of 6':'0.3 ms · 6 of 6'],['Output','code','2.1 ms']].map((x,i)=>({n:String(i+1).padStart(2,'0'),name:x[0],kind:x[1],time:x[2],fg:x[1]==='code'?C.body:C.blue}));
+    const trace=runs.slice(0,view).reverse().map(r=>{const open=!!s.open[r.r];return{head:`=== RUN ${r.r} · ${r.kind} · ${r.r===1?'8 messages':'1 new message'} · 18 Nov ${r.time} ===`,callLine:`[#${r.r}] model=${MODEL}  area=reading`,tokLine:`  TOKENS: prompt ${N(r.tok[0])} · completion ${N(r.tok[1])} · total ${N(r.tok[0]+r.tok[1])}   (reported by API)`,open,toggleLabel:open?'  Hide input and output':'  Show input and output',toggle:()=>this.setState(st=>({open:{...st.open,[r.r]:!st.open[r.r]}})),input:r.input,output:r.output,lines:r.lines,foot:`--- run tokens ${N(r.tok[0]+r.tok[1])} · calls 1 · cumulative tokens ${N(r.cum)} · cumulative calls ${r.r} ---`};});
+    // changes
+    const changes=runs.slice(1,view).reverse().map(r=>{const prev=runs[r.r-2].P;let deltas,result,fg,areas;
+      if(!r.sc){deltas=[{label:'Total',from:N(prev.total),to:N(r.P.total)}];result='No impact';fg=C.grey;areas='none';}
+      else{const st=ST[r.sc.status];result=st[0];fg=st[1];areas=r.sc.areas.length?r.sc.areas.join(', '):'none';
+        if(r.a.key==='print')deltas=[{label:'Printing',from:'10,000',to:'15,000'},{label:'Total',from:N(prev.total),to:N(r.P.total)},{label:'Remaining',from:N(prev.remaining),to:N(r.P.remaining)}];
+        else if(r.a.key==='boxes')deltas=[{label:'Boxes ordered',from:'177',to:'177'},{label:'Total',from:N(prev.total),to:N(r.P.total)}];
+        else deltas=[{label:'Judges available',from:'20',to:'16'},{label:'Judges needed',from:'17',to:'17'},{label:'Checks passing',from:'6',to:'5'}];}
+      return{n:r.r,m:r.m,title:r.sc?r.sc.title:'Pasted message',result,fg,areas,tok:N(r.tok[0]+r.tok[1]),deltas:deltas.map(d=>({...d,fg:d.from===d.to?C.body:C.ink}))};});
+    // composer
+    const addedKeys=added.map(a=>a.key);
+    const quick=PRESETS.map(k=>{const used=addedKeys.includes(k);return{label:SC[k].chip,fg:used?'#B6BEC9':C.blue,onClick:()=>!used&&this.setState({draft:SC[k].text})};});
+    const can=!!s.draft.trim()&&!s.running;
+    const send=()=>{if(!can)return;const text=s.draft.trim();const key=PRESETS.find(k=>SC[k].text===text&&!addedKeys.includes(k))||'custom';this.setState({running:true});this.t=setTimeout(()=>this.setState(st=>{const a=[...st.added,{key,text}];return{added:a,view:a.length+1,draft:'',running:false};}),1200);};
+    // exports
+    const last=runs[runs.length-1];
+    const traceTxt=runs.map(r=>[`=== RUN ${r.r} · ${r.kind} · 18 Nov ${r.time} ===`,`[#${r.r}] model=${MODEL}  area=reading`,'  INPUT : '+r.input,'  OUTPUT: '+r.output,`  TOKENS: prompt ${r.tok[0]} · completion ${r.tok[1]} · total ${r.tok[0]+r.tok[1]}   (reported by API)`,...r.lines.map(l=>l.t),`--- run tokens ${r.tok[0]+r.tok[1]} · calls 1 · cumulative tokens ${r.cum} · cumulative calls ${r.r} ---`].join('\n')).join('\n\n');
+    const planMd=`# Hackathon plan\n\nHeadcount 177 · Teams 50 · Judges 17/${last.P.avail}\nVenue: Hall A (Rs 120,000)\nFood: standard × 177 = Rs 212,400\nJudging: 17 judges, 3 rounds × 15 min, 13:00–13:45\nBudget: Rs ${N(last.P.total)} of 650,000 (remaining ${N(last.P.remaining)})\nChecks: ${last.P.infeasible?5:6}/6\n`;
+    return{
+      fileMeta:`pack.txt, ${8+added.length} messages, ${maxRun} run${maxRun>1?'s':''}`,dlPlan:()=>this.download('plan.md',planMd),dlTrace:()=>this.download('trace.txt',traceTxt),
+      heroMeta,headline,subline,checks,passText:`${pass} of 6 pass`,passFg:pass===6?C.green:C.red,figures,tabs,runTabs,
+      isPlan:s.tab==='plan',isMessages:s.tab==='messages',isTrace:s.tab==='trace',isChanges:s.tab==='changes',
+      venues,food,blocks,judgeCols,rounds,judgingNote:P.infeasible?'16 available, 1 short':`${P.avail-17} on standby, not paid or fed`,budgetRows,bar,budgetNote:`Rs ${N(P.total)} spent, Rs ${N(P.remaining)} left`,
+      msgFilters,ledger,stepsTitle:`Run ${view}, step by step`,steps,trace,sessionNote:`Session: ${view} model calls, ${N(R.cum)} tokens`,
+      changes,noChanges:view===1,
+      draft:s.draft,onDraft:e=>this.setState({draft:e.target.value}),onKey:e=>{if(e.key==='Enter')send();},send,sendBg:can?C.blue:'#B6BEC9',sendLabel:s.running?'Running…':'Run update',quick
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#F6F5F1;color:#1A1C21;font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}a{color:#1A1C21}a:hover{color:#8A5300}*{box-sizing:border-box}textarea,button{font-family:inherit}</style>
+</helmet>
+<div style="height:100vh;min-width:1180px;display:grid;grid-template-columns:52px minmax(0,1fr);background:#F6F5F1;overflow-x:auto">
+
+<nav style="background:#FFFFFF;border-right:1px solid #E3E1DA;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px">
+  <a href="Brand Guide.dc.html" title="Brand guide" style="width:30px;height:30px;border-radius:7px;background:#1A1C21;position:relative;display:block;margin-bottom:14px"><span style="position:absolute;left:7px;top:7px;width:8px;height:8px;border-radius:50%;background:#F0B54A"></span></a>
+  <sc-for list="{{ rail }}" as="r" hint-placeholder-count="3">
+    <button onClick="{{ r.select }}" title="{{ r.label }}" style="all:unset;cursor:pointer;width:36px;height:36px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:{{ r.bg }};color:{{ r.fg }}"><span style="font-size:15px;line-height:1">{{ r.icon }}</span><span style="font-size:8px;font-weight:600;letter-spacing:0.04em">{{ r.short }}</span></button>
+  </sc-for>
+</nav>
+
+<div style="display:grid;grid-template-rows:52px minmax(0,1fr);min-width:0;min-height:0">
+  <header style="background:#FFFFFF;border-bottom:1px solid #E3E1DA;display:flex;align-items:center;gap:18px;padding:0 16px;min-width:0">
+    <div style="display:flex;align-items:baseline;gap:10px;white-space:nowrap">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600">pack.txt</span>
+      <span style="font-size:12px;color:#565A63">{{ savedText }}</span>
+    </div>
+    <div style="display:flex;gap:14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63;white-space:nowrap;overflow:hidden">
+      <span><span style="color:#1A1C21;font-weight:600">177</span> people</span><span><span style="color:#1A1C21;font-weight:600">50</span> teams</span><span><span style="color:{{ judgesFg }};font-weight:600">{{ judgesText }}</span> judges</span><span><span style="color:#1A1C21;font-weight:600">{{ totalText }}</span> / 650,000</span>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <span title="{{ checksTitle }}" style="font-size:12px;font-weight:600;padding:5px 10px;border-radius:6px;background:{{ checksBg }};color:{{ checksFg }};white-space:nowrap">{{ checksLabel }}</span>
+      <button onClick="{{ dlPlan }}" style="all:unset;cursor:pointer;border:1px solid #E3E1DA;border-radius:7px;padding:6px 10px;font-size:12px;font-weight:600;white-space:nowrap" style-hover="background:#F6F5F1">plan.md ↓</button>
+      <button onClick="{{ dlTrace }}" style="all:unset;cursor:pointer;background:#1A1C21;color:#FFFFFF;border-radius:7px;padding:7px 11px;font-size:12px;font-weight:600;white-space:nowrap">trace.txt ↓</button>
+    </div>
+  </header>
+
+  <div style="display:grid;grid-template-columns:{{ gridCols }};min-height:0;min-width:0">
+
+    <section data-screen-label="{{ viewLabel }}" style="position:relative;min-width:0;min-height:0;overflow:auto;background-color:#F6F5F1;background-image:radial-gradient(#D6D3C9 1px, transparent 1px);background-size:18px 18px">
+      <sc-if value="{{ infeasible }}" hint-placeholder-val="{{ false }}">
+        <div style="position:sticky;top:0;left:0;z-index:3;margin:12px;background:#FBE6E3;border:1px solid #F1C3BD;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:3px">
+          <span style="font-size:14px;font-weight:700;color:#B42318">Infeasible · needs 1 more judge</span>
+          <span style="font-size:13px;color:#7A1A12;line-height:1.45">16 available, 17 needed (50 teams ÷ max 3 per judge). The change is legitimate, so it stays applied. Showing the last valid plan.</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPipeline }}" hint-placeholder-val="{{ true }}">
+        <div style="position:relative;width:820px;height:520px;margin:36px 32px">
+          <svg width="820" height="520" style="position:absolute;left:0;top:0;overflow:visible">
+            <sc-for list="{{ edges }}" as="e" hint-placeholder-count="5">
+              <path d="{{ e.d }}" style="fill:none;stroke:{{ e.c }};stroke-width:2"></path>
+            </sc-for>
+          </svg>
+          <sc-for list="{{ nodes }}" as="n" hint-placeholder-count="6">
+            <button onClick="{{ n.select }}" style="all:unset;cursor:pointer;position:absolute;left:{{ n.x }}px;top:{{ n.y }}px;width:220px;height:140px;background:#FFFFFF;border:{{ n.border }};border-radius:12px;padding:12px 13px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(26,28,33,0.06)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="width:24px;height:24px;border-radius:6px;background:{{ n.iconBg }};color:{{ n.iconFg }};font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ n.icon }}</span>
+                <span style="font-weight:700;font-size:14px">{{ n.title }}</span>
+                <span style="margin-left:auto;width:16px;height:16px;border-radius:50%;background:{{ n.okBg }};color:#FFFFFF;font-size:10px;display:flex;align-items:center;justify-content:center">{{ n.okMark }}</span>
+              </div>
+              <span style="align-self:flex-start;font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 7px;border-radius:5px;background:{{ n.chipBg }};color:{{ n.chipFg }};max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.chip }}</span>
+              <span style="font-size:12px;line-height:1.4;color:#565A63">{{ n.desc }}</span>
+              <span style="margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ n.statFg }}">{{ n.stat }}</span>
+            </button>
+          </sc-for>
+          <span style="position:absolute;left:40px;top:38px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.08em;color:#565A63;background:#ECEBE6;padding:2px 8px;border-radius:5px 5px 0 0">START</span>
+        </div>
+        <div style="margin:0 32px 24px;display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#565A63">
+          <span style="display:flex;gap:6px;align-items:center"><span style="width:10px;height:10px;border-radius:3px;background:#F0B54A"></span>model call (costs tokens)</span>
+          <span style="display:flex;gap:6px;align-items:center"><span style="width:10px;height:10px;border-radius:3px;background:#1A1C21"></span>plain code (0 tokens)</span>
+          <span>Click a step to inspect its input and output.</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:20px;display:flex;flex-direction:column;gap:16px;max-width:980px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+            <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Venue · msg 2</span>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span style="font-size:24px;font-weight:600">Hall A</span><span style="font-family:'JetBrains Mono',monospace;font-size:16px">Rs 120,000</span></div>
+              <span style="font-size:13px;color:#565A63;line-height:1.45">Cheapest available option with seats ≥ 177 and every required feature.</span>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ venues }}" as="v" hint-placeholder-count="4">
+                  <div style="display:grid;grid-template-columns:minmax(0,1fr) 44px 80px;gap:8px;padding:7px 0;border-top:1px solid #EDEBE5;font-size:13px;align-items:center">
+                    <span style="display:flex;flex-direction:column"><span style="font-weight:{{ v.weight }}">{{ v.name }}</span><span style="font-size:11px;color:{{ v.verdictFg }}">{{ v.verdict }}</span></span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right;color:#565A63">{{ v.seats }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right">{{ v.price }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Food · msg 4</span>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><span style="font-size:24px;font-weight:600">Standard box</span><span style="font-family:'JetBrains Mono',monospace;font-size:16px">Rs 212,400</span></div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+                <div style="display:flex;flex-direction:column"><span style="font-size:12px;color:#565A63">Boxes</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px">177</span><span style="font-size:11px;color:#565A63">= headcount</span></div>
+                <div style="display:flex;flex-direction:column"><span style="font-size:12px;color:#565A63">Per head</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px">1,200</span><span style="font-size:11px;color:#565A63">12 Nov</span></div>
+                <div style="display:flex;flex-direction:column"><span style="font-size:12px;color:#565A63">Delivery</span><span style="font-family:'JetBrains Mono',monospace;font-size:18px">0</span><span style="font-size:11px;color:#565A63">free</span></div>
+              </div>
+              <span style="font-size:12px;color:#565A63;line-height:1.45">Basic Rs 800 → Rs 141,600 is the fallback if the budget tightens. Rs 1,000 (msg 3) superseded.</span>
+            </div>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Schedule · 240 min</span><span style="font-size:12px;color:#565A63">Start 10:00 is a planner assumption</span></div>
+            <div style="display:flex;height:36px;border-radius:7px;overflow:hidden;gap:2px">
+              <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+                <div title="{{ b.name }}" style="flex:{{ b.min }} 1 0;background:{{ b.bg }};color:{{ b.fg }};font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;align-items:center;padding:0 6px;overflow:hidden;white-space:nowrap">{{ b.min }}′</div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+                <div style="display:grid;grid-template-columns:100px minmax(0,1fr) 56px 110px;gap:8px;padding:6px 0;border-top:1px solid #EDEBE5;font-size:13px;align-items:center">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ b.time }}</span><span style="font-weight:500">{{ b.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right">{{ b.min }} min</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;text-align:right">{{ b.src }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Judging · 17 judges × 3 rounds · msg 5</span><span style="font-size:12px;color:#565A63">{{ standby }}</span></div>
+            <div style="overflow-x:auto">
+              <div style="display:grid;grid-template-columns:52px repeat(17,minmax(34px,1fr));gap:3px;min-width:680px">
+                <span></span>
+                <sc-for list="{{ judgeCols }}" as="j" hint-placeholder-count="17"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#565A63;text-align:center">{{ j }}</span></sc-for>
+                <sc-for list="{{ rounds }}" as="r" hint-placeholder-count="3">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;display:flex;align-items:center">{{ r.time }}</span>
+                  <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="17"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-align:center;padding:6px 0;border-radius:4px;background:{{ c.bg }};color:{{ c.fg }}">{{ c.t }}</span></sc-for>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #E3E1DA;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#565A63">Budget · Rs 650,000</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ budgetHead }}</span></div>
+            <div style="display:flex;height:12px;border-radius:4px;overflow:hidden;gap:2px">
+              <sc-for list="{{ bar }}" as="s" hint-placeholder-count="6"><div title="{{ s.label }}" style="flex:{{ s.v }} 1 0;background:{{ s.bg }}"></div></sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ budgetRows }}" as="b" hint-placeholder-count="10">
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) 100px 56px 90px;gap:8px;padding:7px 0;border-top:1px solid {{ b.line }};font-size:13px;font-weight:{{ b.weight }};align-items:center">
+                  <span>{{ b.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;font-weight:400">{{ b.basis }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63;font-weight:400">{{ b.src }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;color:{{ b.fg }}">{{ b.amount }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isLedger }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:20px;display:flex;flex-direction:column;gap:12px;max-width:900px">
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ msgFilters }}" as="f" hint-placeholder-count="6">
+              <button onClick="{{ f.select }}" style="all:unset;cursor:pointer;font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.fg }}">{{ f.label }} · {{ f.count }}</button>
+            </sc-for>
+          </div>
+          <sc-for list="{{ ledger }}" as="m" hint-placeholder-count="8">
+            <article style="background:#FFFFFF;border:1px solid {{ m.border }};border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#565A63">{{ m.i }}</span>
+              <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="font-weight:600;font-size:14px">{{ m.from }}</span><span style="font-size:12px;color:#565A63">{{ m.ch }} · {{ m.date }}</span><span style="margin-left:auto;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;background:{{ m.bg }};color:{{ m.fg }}">{{ m.label }}</span></div>
+                <p style="margin:0;font-size:13px;line-height:1.5;color:#565A63">“{{ m.text }}”</p>
+                <div style="background:#F6F5F1;border-radius:7px;padding:8px 10px;font-size:13px;line-height:1.5">{{ m.reason }}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px"><sc-for list="{{ m.facts }}" as="x" hint-placeholder-count="2"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 6px;border-radius:4px;border:1px solid #E3E1DA;color:{{ x.fg }};text-decoration:{{ x.deco }}">{{ x.t }}</span></sc-for></div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </sc-if>
+    </section>
+
+    <sc-if value="{{ logOpen }}" hint-placeholder-val="{{ true }}">
+      <aside data-screen-label="Run log" style="background:#FFFFFF;border-left:1px solid #E3E1DA;display:flex;flex-direction:column;min-height:0;min-width:0">
+        <div style="padding:16px 16px 0;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-weight:700;font-size:16px">Run log</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#565A63">{{ runTag }}</span><button onClick="{{ closeLog }}" style="all:unset;cursor:pointer;margin-left:auto;color:#565A63;font-size:16px;padding:2px 6px">×</button></div>
+          <div style="display:flex;gap:18px;border-bottom:1px solid #E3E1DA">
+            <sc-for list="{{ logTabs }}" as="t" hint-placeholder-count="2">
+              <button onClick="{{ t.select }}" style="all:unset;cursor:pointer;padding:6px 0 9px;font-size:12px;font-weight:700;letter-spacing:0.06em;color:{{ t.fg }};border-bottom:2px solid {{ t.line }}">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex:1;min-height:0;overflow:auto;padding:14px 16px 20px;display:flex;flex-direction:column;gap:12px">
+          <div style="flex-shrink:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;background:{{ statusBg }};border:1px solid {{ statusBorder }};border-radius:9px;padding:10px 12px">
+            <div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.06em;color:#565A63">STATUS</span><span style="font-size:13px;font-weight:700;color:{{ statusFg }}">● {{ statusText }}</span></div>
+            <div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.06em;color:#565A63">ELAPSED</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ elapsed }}</span></div>
+            <div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.06em;color:#565A63">RUN TOKENS</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8A5300;font-weight:600">{{ runTokens }}</span></div>
+          </div>
+
+          <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ true }}">
+            <div style="flex-shrink:0;display:flex;align-items:center;gap:8px"><span style="width:20px;height:20px;border-radius:5px;background:{{ selIconBg }};color:{{ selIconFg }};font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ selIcon }}</span><span style="font-weight:700;font-size:14px">{{ selTitle }}</span></div>
+            <sc-for list="{{ ioBoxes }}" as="box" hint-placeholder-count="2">
+              <div style="flex-shrink:0;background:#F6F5F1;border:1px solid #E3E1DA;border-radius:9px;overflow:hidden">
+                <div style="display:flex;align-items:center;padding:8px 10px;border-bottom:1px solid #E3E1DA"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em">{{ box.label }}</span><button onClick="{{ box.copy }}" style="all:unset;cursor:pointer;margin-left:auto;font-size:11px;color:#565A63">copy</button></div>
+                <div style="max-height:220px;overflow:auto;padding:8px 0">
+                  <sc-for list="{{ box.lines }}" as="l" hint-placeholder-count="6">
+                    <div style="display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.55"><span style="text-align:right;color:#9A9DA3">{{ l.n }}</span><span style="white-space:pre-wrap;word-break:break-word;padding-right:10px;color:#1F3E8C">{{ l.t }}</span></div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+            <div style="flex-shrink:0;display:flex;flex-direction:column;gap:6px;margin-top:4px">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em">METADATA</span>
+              <sc-for list="{{ meta }}" as="m" hint-placeholder-count="7">
+                <div style="display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px;font-size:13px;padding:3px 0"><span style="color:#565A63">{{ m.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:{{ m.fg }}">{{ m.v }}</span></div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isTracing }}" hint-placeholder-val="{{ false }}">
+            <div style="flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600">{{ traceHead }}</div>
+            <div style="flex-shrink:0;background:#FCF1DC;border:1px solid #F3DDB0;border-radius:8px;padding:9px 10px;display:flex;flex-direction:column;gap:4px;font-family:'JetBrains Mono',monospace;font-size:11.5px">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span style="font-weight:700">#{{ call.num }}</span><span>model={{ call.model }}</span><span style="background:#F0B54A;padding:0 6px;border-radius:4px;font-weight:600">reading</span></div>
+              <span style="color:#8A5300">TOKENS: prompt {{ call.p }} · completion {{ call.c }} · total {{ call.t }} (reported by API)</span>
+            </div>
+            <div style="flex-shrink:0;display:flex;flex-direction:column;gap:2px">
+              <sc-for list="{{ codeLines }}" as="c" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:44px 70px minmax(0,1fr);gap:6px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.5;padding:2px 0"><span style="color:#9A9DA3">[code]</span><span style="color:#565A63">{{ c.tag }}</span><span style="color:{{ c.fg }}">{{ c.text }}</span></div>
+              </sc-for>
+            </div>
+            <div style="flex-shrink:0;border-top:1px solid #E3E1DA;padding-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63">{{ traceFoot }}</div>
+          </sc-if>
+        </div>
+      </aside>
+    </sc-if>
+
+    <aside data-screen-label="Messages panel" style="background:#FFFFFF;border-left:1px solid #E3E1DA;display:flex;flex-direction:column;min-height:0;min-width:0">
+      <div style="padding:14px 16px;border-bottom:1px solid #E3E1DA;display:flex;align-items:center;gap:8px">
+        <span style="font-weight:700;font-size:15px;letter-spacing:0.02em">MESSAGES</span>
+        <span style="font-size:12px;color:#565A63">{{ fileMeta }}</span>
+        <sc-if value="{{ logClosed }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openLog }}" style="all:unset;cursor:pointer;margin-left:auto;font-size:12px;font-weight:600;border:1px solid #E3E1DA;border-radius:6px;padding:4px 8px">Run log</button></sc-if>
+      </div>
+      <div style="flex:1;min-height:0;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ feed }}" as="f" hint-placeholder-count="3">
+          <sc-if value="{{ f.isUser }}" hint-placeholder-val="{{ false }}">
+            <div style="flex-shrink:0;align-self:flex-end;max-width:86%;background:#EEF1F8;border-radius:12px 12px 4px 12px;padding:10px 13px;display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:11px;color:#565A63;font-family:'JetBrains Mono',monospace">appended to pack.txt · msg {{ f.m }}</span>
+              <span style="font-size:14px;line-height:1.45">{{ f.text }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.isBot }}" hint-placeholder-val="{{ true }}">
+            <div style="flex-shrink:0;display:flex;flex-direction:column;gap:10px">
+              <div style="flex-shrink:0;border:1px solid {{ f.procBorder }};background:{{ f.procBg }};border-radius:10px;overflow:hidden">
+                <button onClick="{{ f.select }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 12px;width:100%;box-sizing:border-box">
+                  <span style="width:14px;height:14px;border-radius:50%;background:{{ f.dot }};color:#FFFFFF;font-size:9px;display:flex;align-items:center;justify-content:center">{{ f.mark }}</span>
+                  <span style="font-size:13px;font-weight:600">Run {{ f.n }} · {{ f.kind }}</span>
+                  <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:#565A63">{{ f.elapsed }}</span>
+                  <span style="font-size:11px;color:#565A63">{{ f.caret }}</span>
+                </button>
+                <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:4px;padding:0 10px 10px">
+                    <sc-for list="{{ f.steps }}" as="st" hint-placeholder-count="6">
+                      <button onClick="{{ st.select }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;background:#FFFFFF;border:1px solid #E3E1DA;border-radius:7px;padding:6px 9px">
+                        <span style="color:#9A9DA3;font-size:10px">›</span>
+                        <span style="width:18px;height:18px;border-radius:5px;background:{{ st.iconBg }};color:{{ st.iconFg }};font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ st.icon }}</span>
+                        <span style="font-size:12px;font-weight:600">{{ st.name }}</span>
+                        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ st.fg }}">{{ st.time }}</span>
+                        <span style="width:13px;height:13px;border-radius:50%;background:{{ st.okBg }};color:#FFFFFF;font-size:8px;display:flex;align-items:center;justify-content:center">{{ st.mark }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.5">
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:{{ f.chipBg }};color:{{ f.chipFg }}">{{ f.chip }}</span><span style="font-weight:600">{{ f.headline }}</span></div>
+                <span style="color:#1A1C21">{{ f.reason }}</span>
+                <sc-for list="{{ f.facts }}" as="x" hint-placeholder-count="2">
+                  <div style="display:flex;justify-content:space-between;gap:10px;font-size:13px;border-top:1px solid #EDEBE5;padding-top:6px"><span style="color:#565A63">{{ x.k }}</span><span style="font-family:'JetBrains Mono',monospace;font-weight:600;color:{{ x.fg }}">{{ x.v }}</span></div>
+                </sc-for>
+                <button onClick="{{ f.openPlan }}" style="all:unset;cursor:pointer;font-size:13px;font-weight:600;color:#1A1C21;text-decoration:underline;text-underline-offset:3px;align-self:flex-start">{{ f.link }}</button>
+              </div>
+            </div>
+          </sc-if>
+        </sc-for>
+        <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+          <div style="flex-shrink:0;border:1px solid #F3DDB0;background:#FCF1DC;border-radius:10px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8A5300">{{ runningText }}</div>
+        </sc-if>
+      </div>
+      <div style="border-top:1px solid #E3E1DA;padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <sc-for list="{{ quick }}" as="q" hint-placeholder-count="3">
+            <button onClick="{{ q.onClick }}" style="all:unset;cursor:pointer;font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid #E3E1DA;color:{{ q.fg }};background:#F6F5F1">{{ q.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-end;border:1px solid #E3E1DA;border-radius:10px;padding:8px 8px 8px 12px;background:#FFFFFF">
+          <textarea value="{{ draft }}" onChange="{{ onDraft }}" rows="2" placeholder="Paste the new message exactly as released…" style="flex:1;border:none;outline:none;resize:none;font-size:14px;line-height:1.45;color:#1A1C21;background:transparent"></textarea>
+          <button onClick="{{ send }}" title="Append to pack.txt and run" style="all:unset;cursor:pointer;width:34px;height:34px;border-radius:8px;background:{{ sendBg }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px">➤</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#565A63">
+          <span style="font-family:'JetBrains Mono',monospace">$ python run.py pack.txt</span>
+          <span style="display:flex;gap:6px;align-items:center">predicted calls: 1 × <span style="font-family:'JetBrains Mono',monospace;background:#FCF1DC;color:#8A5300;padding:1px 6px;border-radius:4px;font-weight:600">reading</span></span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startRun&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:1,&quot;max&quot;:4,&quot;step&quot;:1,&quot;default&quot;:3,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Demo state&quot;},&quot;initialView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;pipeline&quot;,&quot;plan&quot;,&quot;ledger&quot;],&quot;default&quot;:&quot;pipeline&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo state&quot;}}">
+const ST={applied:['Applied','#1E7A4C','#E2F1E8'],superseded:['Superseded','#5F6269','#ECEBE6'],rejected:['Rejected','#B42318','#FBE6E3'],request:['Request · included','#2456B8','#E4EBFA'],noimpact:['No impact','#5F6269','#ECEBE6'],infeasible:['Applied · infeasible','#B42318','#FBE6E3']};
+const N=x=>x.toLocaleString('en-US');
+const MODEL='llama-3.1-8b-instant';
+const TIMES=['11:42:15','13:31:07','13:38:44','13:46:02','13:52:30','13:58:11','14:03:40','14:09:02'];
+const AREAS=['venue','schedule','food','judging','budget'];
+const BASE=[
+{from:"Dean's office",ch:'email',date:'9 Nov',status:'applied',text:'Approved: a 4-hour hackathon for 150 students in teams of 3. The budget is Rs 650,000, all in. Ten staff will be on duty. Please keep a 15-minute prayer break in the schedule.',reason:'Authority owns event rules: students 150, team size 3, 4 h, budget Rs 650,000, staff 10, prayer break 15 min.',facts:['students=150','team_size=3','duration_min=240','budget=650,000','staff=10','block prayer·15']},
+{from:'Margalla Event Halls',ch:'email',date:'3 Nov',status:'applied',text:'Room D seats 80 at Rs 40,000. Hall A seats 200 at Rs 120,000. Hall B seats 200 at Rs 150,000. Hall C seats 300 at Rs 220,000. Halls B and C have a standby generator.',reason:'Venue owner: four options with seats, price and generator feature.',facts:['venue Room D·80·40,000','venue Hall A·200·120,000','venue Hall B·200·150,000·generator','venue Hall C·300·220,000·generator']},
+{from:'Caterer',ch:'WhatsApp',date:'20 Oct',status:'superseded',text:'Standard lunch box Rs 1,000 per head.',reason:'Rule 6 · stale. Same key from the same owner; newer message dated 12 Nov (msg 4) stands.',facts:['food standard·1,000'],dead:true},
+{from:'Caterer',ch:'WhatsApp',date:'12 Nov',status:'applied',text:'Salam bhai! Standard lunch box ab Rs 1,200 per head hoga, basic wala Rs 800. Delivery free hai.',reason:'Rule 7 · newer value from the owner. Standard Rs 1,200, basic Rs 800, delivery Rs 0.',facts:['food standard·1,200','food basic·800','fee=0']},
+{from:'Judging coordinator',ch:'email',date:'11 Nov',status:'applied',text:'20 judges have confirmed. The honorarium is Rs 5,000 each. A judge needs 15 minutes per team and should cover no more than three teams.',reason:'Judging coordinator owns judging rules: 20 available, Rs 5,000 each, 15 min per team, max 3 teams per judge.',facts:['judges_available=20','honorarium=5,000','min_per_team=15','max_teams_per_judge=3']},
+{from:'Finance',ch:'email',date:'10 Nov',status:'applied',text:'Already ordered from the event budget: prizes Rs 100,000, backup internet Rs 20,000, printing Rs 10,000.',reason:'Finance owns committed costs: prizes 100,000, internet 20,000, printing 10,000.',facts:['cost prizes·100,000','cost internet·20,000','cost printing·10,000']},
+{from:'Student society',ch:'WhatsApp',date:'13 Nov',status:'request',text:'Can we get a DJ for the closing? The quote is Rs 50,000.',reason:'',facts:['cost DJ·50,000·optional']},
+{from:'A judge',ch:'WhatsApp',date:'14 Nov',status:'noimpact',text:'I may be 10 minutes late on the day. Traffic on Srinagar Highway.',reason:'Rule 9 · no impact. Judge up to 10 min late; judging starts at 13:00, so no block is affected.',facts:['late judge·10']}
+];
+const SC={
+print:{chip:'Printing Rs 15,000',from:'Finance',ch:'email',date:'18 Nov',status:'applied',text:'Finance here. The printing bill came in at Rs 15,000, not Rs 10,000.',facts:['cost printing·15,000'],tok:[548,92],sec:1.184,
+ reason:'Rule 7 · newer value from the owner. Finance owns committed costs: printing 10,000 → 15,000. Old fact in msg 6 superseded.',headline:'Printing updated, budget recomputed',
+ out:{msgs:[{i:9,from:'Finance',role:'finance',date:null,facts:[{k:'cost',v:{name:'printing',amount:15000,basis:'fixed',status:'committed'},q:'printing bill came in at Rs 15,000'}],other:[]}]},
+ res:[{msg:9,fact:'printing',from:10000,to:15000,status:'APPLIED',rule:7},{msg:6,fact:'printing=10000',status:'SUPERSEDED'}],areas:['budget']},
+boxes:{chip:'100 boxes',from:'Caterer',ch:'WhatsApp',date:'18 Nov',status:'rejected',text:'Caterer: I have rounded your order down to 100 boxes to keep the cost low.',facts:['claim boxes=100'],tok:[541,88],sec:1.107,
+ reason:'Rule 2 · derived claim. Caterer set boxes = 100; boxes are derived = headcount 177 (150 students + 17 judges + 10 staff). Order stays 177.',headline:'Wrong message caught, plan unchanged',
+ out:{msgs:[{i:10,from:'Caterer',role:'caterer',date:null,facts:[{k:'claim',v:{key:'boxes',value:100},q:'rounded your order down to 100 boxes'}],other:[]}]},
+ res:[{msg:10,fact:'claim boxes=100',status:'REJECTED',rule:2,reason:'boxes derived = headcount 177'}],areas:[]},
+withdraw:{chip:'4 judges withdrew',from:'Judging coordinator',ch:'email',date:'18 Nov',status:'infeasible',text:'Coordinator here: 4 judges have withdrawn, sorry.',facts:['judges_change=−4'],tok:[536,90],sec:1.226,
+ reason:'Judging coordinator owns judges available: 20 → 16. 17 are needed, so no valid plan exists. The change is legitimate, so it stays applied and the last valid plan is kept.',headline:'Infeasible: needs 1 more judge',
+ out:{msgs:[{i:11,from:'Coordinator',role:'judging',date:null,facts:[{k:'judges_change',v:{delta:-4},q:'4 judges have withdrawn'}],other:[]}]},
+ res:[{msg:11,fact:'judges_available',from:20,to:16,status:'APPLIED',rule:7}],areas:AREAS}
+};
+const PRESETS=['print','boxes','withdraw'];
+const PROMPT='You extract facts for an event planner. Output JSON only, matching the schema.\nRules:\n- One entry per message, in order. Copy sender as written; pick role from the list.\n- Numbers as plain integers in rupees/minutes/people. "lakh"=100000, "k"/"hazaar"=1000.\n- Use only keys in the vocabulary. Anything else -> "other".\n- A request -> cost status "optional".\n- Anyone stating a count we compute -> "claim".\n- No arithmetic, no opinions.\nSchema: {compact schema}\n';
+const RUN1_OUT={msgs:[{i:1,from:"Dean's office",role:'authority',date:'2026-11-09',facts:[{k:'students',v:150,q:'150 students in teams of 3'},{k:'team_size',v:3,q:'teams of 3'},{k:'budget',v:650000,q:'budget is Rs 650,000'},{k:'staff',v:10,q:'Ten staff will be on duty'}]},{i:3,from:'Caterer',role:'caterer',date:'2026-10-20',facts:[{k:'food',v:{name:'standard',price_per_head:1000},q:'Standard lunch box Rs 1,000'}]},'… 6 more messages']};
+const NODES=[
+{id:'input',x:40,y:60,icon:'IN',title:'Input file',chip:'pack.txt',desc:'Reads raw text. Diffs against saved state to find new messages.'},
+{id:'reader',x:300,y:60,icon:'AI',title:'Reader',chip:MODEL+' · reading',desc:'The only model call. Turns messages into typed facts.',llm:true},
+{id:'resolver',x:560,y:60,icon:'R',title:'Resolver',chip:'code · rules 1–9',desc:'Authority, staleness, derived claims. Prints a reason per fact.'},
+{id:'planner',x:560,y:300,icon:'P',title:'Planner',chip:'code · dependency map',desc:'Venue, food, schedule, judging, budget. Recomputes affected areas.'},
+{id:'checks',x:300,y:300,icon:'✓',title:'Six checks',chip:'code · before printing',desc:'Figures, budget, venue, schedule, judges, coverage.'},
+{id:'output',x:40,y:300,icon:'OUT',title:'Output',chip:'plan.md · trace.txt',desc:'Writes plan, numbered trace and state for the next update.'}
+];
+const EDGES=['M260 130 L300 130','M520 130 L560 130','M670 200 C670 250 670 250 670 300','M560 370 L520 370','M300 370 L260 370'];
+function plan(keys){const printing=keys.includes('print')?15000:10000;const avail=keys.includes('withdraw')?16:20;const committed=120000+printing;const required=committed+120000+85000+212400;const total=required+50000;return{printing,avail,committed,required,total,remaining:650000-total,headroom:650000-required,infeasible:avail<17};}
+const toLines=x=>(typeof x==='string'?x:JSON.stringify(x,null,2)).split('\n').map((t,i)=>({n:i+1,t}));
+
+class Component extends DCLogic {
+  state=this.init();
+  init(){const start=Math.max(1,Math.min(4,this.props.startRun??3));const added=PRESETS.slice(0,start-1).map(k=>({key:k,text:SC[k].text}));return{added,view:start,node:'reader',logTab:'detail',logOpen:true,center:this.props.initialView??'pipeline',msgFilter:'all',openRuns:{[start]:true},draft:'',running:false};}
+  componentWillUnmount(){clearTimeout(this.t);}
+  runData(r,added){
+    const keys=i=>added.slice(0,Math.max(0,i-1)).map(a=>a.key);
+    const P=plan(keys(r));const a=r>1?added[r-2]:null;const sc=a?SC[a.key]:null;const m=a?7+r:null;
+    const tok=r===1?[1012,884]:sc?sc.tok:[522,41];const sec=r===1?6.214:sc?sc.sec:0.982;
+    const cum=(()=>{let t=0;for(let i=1;i<=r;i++){const b=i>1?added[i-2]:null;const s=b?SC[b.key]:null;const k=i===1?[1012,884]:s?s.tok:[522,41];t+=k[0]+k[1];}return t;})();
+    const kind=r===1?'full':'update';
+    const planSkipped=a&&(a.key==='boxes'||!sc);
+    const times={input:'0.4 ms',reader:sec.toFixed(3)+' s',resolver:'0.6 ms',planner:planSkipped?'skipped':'1.2 ms',checks:'0.3 ms',output:'2.1 ms'};
+    const code=(tag,text,tone)=>({tag,text,fg:tone==='bad'?'#B42318':tone==='good'?'#1E7A4C':'#565A63'});
+    let lines;
+    if(r===1)lines=[code('schema','valid · 8 msgs · 27 facts'),code('grounding','27/27 numbers found in source'),code('resolver','msg 3 SUPERSEDED (newer msg 4, 12 Nov)'),code('resolver','msg 7 DJ REQUEST (optional)'),code('resolver','msg 8 NO IMPACT (judging at +3:00)'),code('derive','teams 50 · judges 17/20 · headcount 177'),code('venue','Hall A · cheapest with seats ≥ 177'),code('optimiser',`standard kept · DJ fits (headroom ${N(P.headroom)})`),code('checks',`6/6 PASS · total ${N(P.total)}`,'good')];
+    else if(a.key==='print')lines=[code('grounding','1/1 numbers found'),code('resolver',`msg ${m} printing 10,000 → 15,000 APPLIED`),code('supersede','msg 6 printing=10,000'),code('recompute','budget only'),code('checks',`6/6 PASS · total ${N(P.total)}`,'good')];
+    else if(a.key==='boxes')lines=[code('grounding','1/1 numbers found'),code('resolver',`msg ${m} claim boxes=100 REJECTED · rule 2: boxes = headcount 177`,'bad'),code('recompute','none · plan untouched'),code('checks',`6/6 PASS · total ${N(P.total)}`,'good')];
+    else if(a.key==='withdraw')lines=[code('resolver',`msg ${m} judges_available 20 → 16 APPLIED`),code('recompute','judging, schedule, food, venue, budget'),code('solver','needs 17 > 16 available · no valid plan','bad'),code('keep',`last valid plan from run ${r-1} kept`,'bad'),code('checks','5/6 · enough judges FAIL','bad')];
+    else lines=[code('resolver',`msg ${m} no facts · NO IMPACT`),code('recompute','none · plan untouched'),code('checks',P.infeasible?'5/6 · enough judges FAIL':`6/6 PASS · total ${N(P.total)}`,P.infeasible?'bad':'good')];
+    const io={
+      input:{in:{file:'pack.txt',state_found:r>1},out:{mode:kind,new_messages:r===1?8:1}},
+      reader:{in:PROMPT+(r===1?'Messages:\n1 | Dean\'s office, email | 9 Nov | Approved: a 4-hour hackathon…\n… (8 messages, raw text exactly as in the file)':'Reuse these existing names: Room D, Hall A, Hall B, Hall C, standard, basic, prizes, internet, printing, DJ\nMessages:\n'+m+' | '+a.text),out:r===1?RUN1_OUT:sc?sc.out:{msgs:[{i:m,from:'Unknown',role:'unknown',date:null,facts:[],other:[]}]}},
+      resolver:{in:{facts:r===1?27:(sc?1:0)},out:r===1?[{msg:3,status:'SUPERSEDED',rule:6},{msg:7,status:'REQUEST',rule:8},{msg:8,status:'NO_IMPACT',rule:9},{applied:[1,2,4,5,6]}]:sc?sc.res:[{msg:m,status:'NO_IMPACT',rule:9}]},
+      planner:{in:{recompute:r===1?AREAS:sc?sc.areas:[]},out:{teams:50,judges_needed:17,judges_available:P.avail,rounds:3,headcount:177,venue:'Hall A',food:'standard',boxes:177,total:P.total,remaining:P.remaining,feasible:!P.infeasible}},
+      checks:{in:{plan:'run '+r},out:{correct_figures:true,within_budget:true,venue_fits:true,schedule_valid:true,enough_judges:!P.infeasible,all_areas_covered:true}},
+      output:{in:{plan_valid:!P.infeasible},out:{written:['out/plan.md','out/trace.txt','out/trace.jsonl','state/<hash>.json']}}
+    };
+    return{r,P,a,sc,m,tok,sec,cum,kind,times,lines,io,status:P.infeasible?'INFEASIBLE':'SUCCESS'};
+  }
+  download(name,text){const b=new Blob([text],{type:'text/plain'});const u=URL.createObjectURL(b);const el=document.createElement('a');el.href=u;el.download=name;el.click();setTimeout(()=>URL.revokeObjectURL(u),500);}
+  renderVals(){
+    const s=this.state,added=s.added,maxRun=added.length+1,view=Math.min(s.view,maxRun);
+    const runs=Array.from({length:maxRun},(_,i)=>this.runData(i+1,added));
+    const R=runs[view-1],P=R.P,keysNow=added.slice(0,view-1).map(a=>a.key);
+    const printMsg=keysNow.includes('print')?9+keysNow.indexOf('print'):6;
+    const nodeMeta=id=>NODES.find(n=>n.id===id);
+    const iconStyle=n=>n.llm?{iconBg:'#F0B54A',iconFg:'#1A1C21'}:{iconBg:'#1A1C21',iconFg:'#FFFFFF'};
+    const nodeOk=(id,run)=>!(id==='checks'&&run.P.infeasible);
+    // canvas
+    const nodes=NODES.map(n=>{const sel=s.node===n.id,ok=nodeOk(n.id,R);const t=R.times[n.id];return{...n,...iconStyle(n),border:sel?'2px solid #1A1C21':ok?'1.5px solid #9CCFB2':'1.5px solid #E79A90',okBg:ok?'#1E7A4C':'#B42318',okMark:ok?'✓':'✕',chipBg:n.llm?'#FCF1DC':'#F6F5F1',chipFg:n.llm?'#8A5300':'#565A63',stat:n.llm?`${N(R.tok[0]+R.tok[1])} tokens · ${t}`:`0 tokens · ${t}`,statFg:n.llm?'#8A5300':'#565A63',select:()=>this.setState({node:n.id,logOpen:true,logTab:'detail'})};});
+    const edges=EDGES.map((d,i)=>({d,c:(i===4&&P.infeasible)?'#E79A90':'#7FBF98'}));
+    // ledger
+    const msgs=BASE.map((m,i)=>({...m,i:i+1}));
+    msgs[6].reason=`Rule 8 · request from a non-owner. Optional DJ Rs 50,000; included because it fits after required costs (headroom Rs ${N(P.headroom)}).`;
+    added.slice(0,view-1).forEach((a,j)=>{const i=9+j,sc=SC[a.key];msgs.push(sc?{...sc,i}:{from:'Unknown sender',ch:'pasted',date:'18 Nov',status:'noimpact',text:a.text,reason:'Rule 9 · no facts in the vocabulary. Plan untouched.',facts:[],i});});
+    if(keysNow.includes('print'))msgs[5].reason+=` Printing 10,000 superseded by msg ${printMsg}.`;
+    const ledgerAll=msgs.map(m=>{const st=ST[m.status];return{...m,label:st[0],fg:st[1],bg:st[2],border:(m.status==='rejected')?'#F1C3BD':'#E3E1DA',facts:m.facts.map(t=>{const dead=m.dead||(m.i===6&&t.includes('printing')&&keysNow.includes('print'));return{t,deco:dead?'line-through':'none',fg:dead?'#7C7F86':'#1A1C21'};})};});
+    const grp=st=>st==='infeasible'?'applied':st;
+    const msgFilters=[['all','All'],['applied','Applied'],['superseded','Superseded'],['rejected','Rejected'],['request','Request'],['noimpact','No impact']].map(([id,label])=>{const on=s.msgFilter===id;return{label,count:id==='all'?ledgerAll.length:ledgerAll.filter(m=>grp(m.status)===id).length,bg:on?'#1A1C21':'#FFFFFF',fg:on?'#FFFFFF':'#1A1C21',border:on?'#1A1C21':'#E3E1DA',select:()=>this.setState({msgFilter:id})};});
+    const ledger=s.msgFilter==='all'?ledgerAll:ledgerAll.filter(m=>grp(m.status)===s.msgFilter);
+    // plan
+    const venues=[['Room D','80','40,000','Too small · 80 < 177','#B42318',400],['Hall A','200','120,000','Chosen · cheapest that fits','#1E7A4C',600],['Hall B','200','150,000','Fits · Rs 30,000 more','#565A63',400],['Hall C','300','220,000','Fits · Rs 100,000 more','#565A63',400]].map(v=>({name:v[0],seats:v[1],price:v[2],verdict:v[3],verdictFg:v[4],weight:v[5]}));
+    const blocks=[['10:00–10:15','Opening and briefing',15,'planner default','#D9D6CC','#1A1C21'],['10:15–12:15','Build',120,'240 − rest','#ECE9E1','#1A1C21'],['12:15–12:30','Prayer break',15,'msg 1','#CFCBBF','#1A1C21'],['12:30–13:00','Lunch',30,'planner default','#DEDAD0','#1A1C21'],['13:00–13:45','Judging · 3 × 15 min',45,'derived','#1A1C21','#FFFFFF'],['13:45–14:00','Closing, prizes, DJ',15,'planner default','#B9B5A9','#1A1C21']].map(b=>({time:b[0],name:b[1],min:b[2],src:b[3],bg:b[4],fg:b[5]}));
+    const judgeCols=Array.from({length:17},(_,j)=>'J'+(j+1));
+    const rounds=['13:00','13:15','13:30'].map((time,r)=>({time,cells:judgeCols.map((_,j)=>{const t=r*17+j+1;return t<=50?{t:'T'+String(t).padStart(2,'0'),bg:'#F6F5F1',fg:'#1A1C21'}:{t:'—',bg:'#FFFFFF',fg:'#9A9DA3'};})}));
+    const budgetRows=[['Committed: prizes','Finance','100,000','msg 6'],['Committed: internet','Finance','20,000','msg 6'],['Committed: printing','Finance',N(P.printing),'msg '+printMsg],['Venue: Hall A','fixed','120,000','msg 2'],["Judges' honorarium",'17 × 5,000','85,000','msg 5'],['Food: standard box','177 × 1,200','212,400','msg 4'],['Required subtotal','',N(P.required),'',1],['DJ (optional request)','fixed','50,000','msg 7'],['Total','',N(P.total),'',1],['Remaining','',N(P.remaining),'',2]].map(r=>({label:r[0],basis:r[1],amount:r[2],src:r[3],weight:r[4]===1?700:400,line:r[4]===1?'#C9C6BD':'#EDEBE5',fg:r[4]===2?'#1E7A4C':'#1A1C21'}));
+    const bar=[['Committed',P.committed,'#565A63'],['Venue',120000,'#1A1C21'],['Judges',85000,'#7C7F86'],['Food',212400,'#B9B5A9'],['DJ',50000,'#9DB4E8'],['Headroom',P.remaining,'#E2F1E8']].map(b=>({label:b[0]+' '+N(b[1]),v:b[1],bg:b[2]}));
+    // log
+    const nm=nodeMeta(s.node),io=R.io[s.node];
+    const copy=txt=>()=>{try{navigator.clipboard.writeText(txt);}catch(e){}};
+    const inTxt=typeof io.in==='string'?io.in:JSON.stringify(io.in,null,2),outTxt=JSON.stringify(io.out,null,2);
+    const isReader=s.node==='reader';
+    const meta=[['Status',nodeOk(s.node,R)?'SUCCESS':'FAIL',nodeOk(s.node,R)?'#1E7A4C':'#B42318'],['Step',nm.title],['Model',isReader?MODEL:'— (plain code)'],['Area tag',isReader?'reading':'—'],['Start time','18 Nov '+TIMES[Math.min(view-1,TIMES.length-1)]],['Elapsed',R.times[s.node]],['Tokens',isReader?`prompt ${N(R.tok[0])} · completion ${N(R.tok[1])}`:'0',isReader?'#8A5300':null],['Model calls',`1 this run · ${view} session`]].map(m=>({k:m[0],v:m[1],fg:m[2]||'#1A1C21'}));
+    const logTabs=[['detail','DETAIL'],['tracing','TRACING']].map(([id,label])=>({label,fg:s.logTab===id?'#1A1C21':'#7C7F86',line:s.logTab===id?'#1A1C21':'transparent',select:()=>this.setState({logTab:id})}));
+    // feed
+    const feed=[];runs.forEach(run=>{
+      if(run.r>1)feed.push({isUser:true,isBot:false,m:run.m,text:run.a.text});
+      const open=!!s.openRuns[run.r],sel=run.r===view;
+      let chip,chipFg,chipBg,headline,reason,facts=[];
+      if(run.r===1){chip='6/6 checks';chipFg='#1E7A4C';chipBg='#E2F1E8';headline='Plan ready from 8 messages';reason='5 applied · 1 superseded (msg 3) · 1 request included (msg 7) · 1 no impact (msg 8).';facts=[{k:'Venue',v:'Hall A · Rs 120,000'},{k:'Food',v:'standard × 177'},{k:'Judges',v:'17 of 20 · 3 rounds'},{k:'Total',v:`Rs ${N(run.P.total)} / 650,000`}];}
+      else if(run.sc){const st=ST[run.sc.status];chip=st[0];chipFg=st[1];chipBg=st[2];headline=run.sc.headline;reason=run.sc.reason;
+        const prev=runs[run.r-2].P;
+        if(run.a.key==='print')facts=[{k:'Total',v:`${N(prev.total)} → ${N(run.P.total)}`},{k:'Recomputed',v:'budget'}];
+        else if(run.a.key==='boxes')facts=[{k:'Boxes',v:'177 (unchanged)'},{k:'Recomputed',v:'none'}];
+        else facts=[{k:'Judges',v:'17 needed / 16 available'},{k:'Fix',v:'1 more judge'}];}
+      else{chip='No impact';chipFg='#5F6269';chipBg='#ECEBE6';headline='Nothing to change';reason='Rule 9 · no facts in the vocabulary. Plan untouched.';facts=[{k:'Recomputed',v:'none'}];}
+      const ok=!run.P.infeasible;
+      feed.push({isUser:false,isBot:true,n:run.r,kind:run.kind+' · 1 model call',elapsed:(run.sec+0.005).toFixed(3)+' s',open,caret:open?'▾':'▸',procBorder:sel?'#1A1C21':ok?'#BFE0CC':'#F1C3BD',procBg:ok?'#F3FAF6':'#FDF3F1',dot:ok?'#1E7A4C':'#B42318',mark:ok?'✓':'!',
+        select:()=>this.setState(st=>({view:run.r,openRuns:{...st.openRuns,[run.r]:!(st.openRuns[run.r]&&st.view===run.r)}})),
+        steps:NODES.map(n=>{const nok=nodeOk(n.id,run);return{name:n.title,icon:n.icon,...iconStyle(n),time:n.llm?`${N(run.tok[0]+run.tok[1])} tok · ${run.times[n.id]}`:run.times[n.id],fg:n.llm?'#8A5300':'#565A63',okBg:nok?'#1E7A4C':'#B42318',mark:nok?'✓':'✕',select:()=>this.setState({view:run.r,node:n.id,logOpen:true,logTab:'detail',center:'pipeline'})};}),
+        chip,chipFg,chipBg,headline,reason,facts:facts.map(f=>({...f,fg:'#1A1C21'})),link:run.r===1?'Open full plan →':'View in pipeline →',
+        openPlan:()=>this.setState({view:run.r,center:run.r===1?'plan':'pipeline'})});
+    });
+    const addedKeys=added.map(a=>a.key);
+    const quick=PRESETS.map(k=>{const used=addedKeys.includes(k);return{label:SC[k].chip,fg:used?'#9A9DA3':'#1A1C21',onClick:()=>!used&&this.setState({draft:SC[k].text})};});
+    const can=!!s.draft.trim()&&!s.running;
+    const rail=[['pipeline','⌬','FLOW','Pipeline'],['plan','▤','PLAN','Plan'],['ledger','≡','MSGS','Message ledger']].map(([id,icon,short,label])=>({icon,short,label,bg:s.center===id?'#1A1C21':'transparent',fg:s.center===id?'#FFFFFF':'#565A63',select:()=>this.setState({center:id})}));
+    const pass=P.infeasible?5:6;
+    // exports
+    const traceTxt=runs.map(run=>[`=== RUN ${run.r} · ${run.kind} · ${run.r===1?'8 messages':'1 new message'} · 18 Nov ${TIMES[Math.min(run.r-1,TIMES.length-1)]} ===`,`[#${run.r}] model=${MODEL}  area=reading`,'  INPUT : '+(typeof run.io.reader.in==='string'?run.io.reader.in:''),'  OUTPUT: '+JSON.stringify(run.io.reader.out),`  TOKENS: prompt ${run.tok[0]} · completion ${run.tok[1]} · total ${run.tok[0]+run.tok[1]}   (reported by API)`,...run.lines.map(l=>`[code] ${l.tag.padEnd(10)} ${l.text}`),`--- run tokens ${N(run.tok[0]+run.tok[1])} · calls 1 · cumulative tokens ${N(run.cum)} · cumulative calls ${run.r} ---`].join('\n')).join('\n\n');
+    const last=runs[runs.length-1].P;
+    const planMd=`# Hackathon plan\n\nHeadcount 177 · Teams 50 · Judges 17/${last.avail}\nVenue: Hall A (Rs 120,000)\nFood: standard × 177 = Rs 212,400\nJudging: 17 judges, 3 rounds × 15 min, 13:00–13:45\nBudget: Rs ${N(last.total)} of 650,000 (remaining ${N(last.remaining)})\nChecks: ${last.infeasible?5:6}/6${last.infeasible?'\nINFEASIBLE: needs 1 more judge':''}\n`;
+    return{
+      rail,savedText:`state saved 18 Nov ${TIMES[Math.min(maxRun-1,TIMES.length-1)]} · viewing run ${view} of ${maxRun}`,
+      judgesText:`17/${P.avail}`,judgesFg:P.infeasible?'#B42318':'#1A1C21',totalText:'Rs '+N(P.total),
+      checksLabel:`${pass}/6 checks`,checksBg:pass===6?'#E2F1E8':'#FBE6E3',checksFg:pass===6?'#1E7A4C':'#B42318',checksTitle:'Correct figures · Within budget · Venue fits · Schedule valid · Enough judges · All areas covered',
+      dlPlan:()=>this.download('plan.md',planMd),dlTrace:()=>this.download('trace.txt',traceTxt),
+      gridCols:s.logOpen?'minmax(0,1fr) 360px 400px':'minmax(0,1fr) 400px',
+      isPipeline:s.center==='pipeline',isPlan:s.center==='plan',isLedger:s.center==='ledger',viewLabel:s.center,
+      infeasible:P.infeasible&&s.center!=='ledger',nodes,edges,
+      venues,blocks,judgeCols,rounds,standby:P.infeasible?'16 available · 1 short':`${P.avail-17} on standby (not paid or fed)`,budgetHead:`Rs ${N(P.total)} spent · ${N(P.remaining)} left`,budgetRows,bar,
+      msgFilters,ledger,
+      logOpen:s.logOpen,logClosed:!s.logOpen,closeLog:()=>this.setState({logOpen:false}),openLog:()=>this.setState({logOpen:true}),
+      runTag:`run ${view} · ${R.kind}`,logTabs,isDetail:s.logTab==='detail',isTracing:s.logTab==='tracing',
+      statusText:R.status,statusFg:P.infeasible?'#B42318':'#1E7A4C',statusBg:P.infeasible?'#FDF3F1':'#F3FAF6',statusBorder:P.infeasible?'#F1C3BD':'#BFE0CC',elapsed:(R.sec+0.005).toFixed(3)+' s',runTokens:N(R.tok[0]+R.tok[1])+' tokens',
+      selTitle:nm.title,selIcon:nm.icon,selIconBg:iconStyle(nm).iconBg,selIconFg:iconStyle(nm).iconFg,
+      ioBoxes:[{label:'INPUT',lines:toLines(inTxt),copy:copy(inTxt)},{label:'OUTPUT',lines:toLines(outTxt),copy:copy(outTxt)}],meta,
+      traceHead:`=== RUN ${view} · ${R.kind} · 18 Nov ${TIMES[Math.min(view-1,TIMES.length-1)]} ===`,call:{num:view,model:MODEL,p:N(R.tok[0]),c:N(R.tok[1]),t:N(R.tok[0]+R.tok[1])},codeLines:R.lines,
+      traceFoot:`run tokens ${N(R.tok[0]+R.tok[1])} · calls 1 · cumulative tokens ${N(R.cum)} · cumulative calls ${view}`,
+      fileMeta:`pack.txt · ${8+added.length} messages`,feed,quick,draft:s.draft,onDraft:e=>this.setState({draft:e.target.value}),sendBg:can?'#1A1C21':'#C9C6BD',
+      send:()=>{if(!can)return;const text=s.draft.trim();const key=PRESETS.find(k=>SC[k].text===text&&!addedKeys.includes(k))||'custom';this.setState({running:true});this.t=setTimeout(()=>this.setState(st=>{const a=[...st.added,{key,text}];const n=a.length+1;return{added:a,view:n,draft:'',running:false,openRuns:{...st.openRuns,[n]:true},node:'resolver',logOpen:true,logTab:'detail',center:'pipeline'};}),1200);},
+      running:s.running,runningText:`Running update · model call #${maxRun+1} · area=reading · new text only…`
+    };
+  }
+}
+</script>
+</body>
+</html>
